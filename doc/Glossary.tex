@@ -1,0 +1,133 @@
+% Acronyms.
+\newacronym{cmb}{CMB}{cosmic microwave background}
+\newacronym{igm}{IGM}{intergalactic medium}
+\newacronym{imf}{IMF}{initial mass function}
+\newacronym{isco}{ISCO}{innermost stable circular orbit}
+\newacronym{ism}{ISM}{interstellar medium}
+\newacronym{ode}{ODE}{ordinary differential equation}
+\newacronym{nfw}{NFW}{Navarro-Frenk-White (dark matter halo profile)}
+\newacronym{sed}{SED}{spectral energy distribution}
+\newacronym{sne}{SNe}{supernovae}
+\newglossaryentry{adaf}{type=\acronymtype, name={ADAF}, description=\glslink{adafg}{advection-dominated accretion flow}, first={advection-dominated accretion flow (ADAF)}, see=[Glossary:]{adafg}}
+\newglossaryentry{pah}{type=\acronymtype, name={PAH}, description=\glslink{pahg}{polycyclic aromatic hydrocarbon}, first={polycyclic aromatic hydrocarbon (PAH)}, see=[Glossary:]{pahg}, firstplural={polycyclic aromatic hydrocarbons (PAH)}, see=[Glossary:]{pahg}}
+\newglossaryentry{dsl}{type=\acronymtype, name={DSL}, description=\glslink{dslg}{domain-specific language}, first={domain specific language (DSL)}, see=[Glossary:]{dslg}, firstplural={domain-specific languages (DSLs)}, see=[Glossary:]{dslg}}
+\newglossaryentry{wdm}{type=\acronymtype, name={WDM}, description=\glslink{wdmg}{warm dark matter}, first={warm dark matter (WDM)}, see=[Glossary:]{wdmg}, firstplural={warm dark matters (WDM)}, see=[Glossary:]{wdmg}}
+\newacronym{sdss}{SDSS}{Sloan Digitial Sky Survey}
+\newglossaryentry{ahf}{type=\acronymtype, name={AHF}, description=\glslink{ahfg}{Amiga's Halo Finder}, first={Amiga's Halo Finder (AHF)}, see=[Glossary:]{ahfg}}
+\newglossaryentry{cdm}{type=\acronymtype, name={CDM}, description=\glslink{cdmg}{cold dark matter}, first={cold dark matter (CDM)}, see=[Glossary:]{cdmg}, firstplural={cold dark matters (CDM)}, see=[Glossary:]{cdmg}}
+\newacronym{mcmc}{MCMC}{Markov Chain Monte Carlo}
+\newglossaryentry{sam}{type=\acronymtype, name={SAM}, description=\glslink{samg}{semi-analytic model}, first={semi-analytic model (SAM)}, see=[Glossary:]{samg}, firstplural={semi-analytic models (SAMs)}, see=[Glossary:]{samg}}
+\newglossaryentry{bie}{type=\acronymtype, name={BIE}, description=\glslink{bieg}{semi-analytic model}, first={Bayesian inference engine (BIE)}, see=[Glossary:]{bieg}, firstplural={Bayesian inference engines (BIEs)}, see=[Glossary:]{bieg}}
+\newglossaryentry{hod}{type=\acronymtype, name={HOD}, description=\glslink{hodg}{halo occupation distribution}, first={halo occupation distribution (HOD)}, see=[Glossary:]{hodg}, firstplural={halo occupation distributions (HODs)}, see=[Glossary:]{hodg}}
+\newglossaryentry{mpi}{type=\acronymtype, name={MPI}, description=\glslink{mpig}{message passing interface}, first={message passing interface (MPI)}, see=[Glossary:]{mpig}, firstplural={message passing interfaces (MPIs)}, see=[Glossary:]{mpig}}
+\newglossaryentry{hdf5}{type=\acronymtype, name={HDF5}, description=\glslink{hdf5g}{hierarchical data format}, first={hierarchical data format (HDF5)}, see=[Glossary:]{hdf5}, firstplural={hierarchical data formats (HDF5s)}, see=[Glossary:]{hdf5g}}
+\newglossaryentry{pbs}{type=\acronymtype, name={PBS}, description=\glslink{pbsg}{portable batch system}, first={portable batch system (PBS)}, see=[Glossary:]{pbsg}, firstplural={portable batch systems (PBSs)}, see=[Glossary:]{pbsg}}
+\newglossaryentry{pdf}{type=\acronymtype, name={PDF}, description=\glslink{pdfg}{probability density function}, first={probability density function (PDF)}, see=[Glossary:]{pdfg}, firstplural={probability density functions (PDFs)}, see=[Glossary:]{pdfg}}
+\newglossaryentry{cdf}{type=\acronymtype, name={CDF}, description=\glslink{cdfg}{cumulative distribution function}, first={cumulative distribution function (CDF)}, see=[Glossary:]{cdfg}, firstplural={cumulative distribution functions (CDFs)}, see=[Glossary:]{cdfg}}
+\newglossaryentry{gsl}{type=\acronymtype, name={GSL}, description=\glslink{gslg}{GNU Scientific Library}, first={GNU Scientific Library (GSL)}, see=[Glossary:]{gslg}}
+\newglossaryentry{gama}{type=\acronymtype, name={GAMA}, description=\glslink{gamag}{Galaxy and Mass Assembly}, first={Galaxy and Mass Assembly (GAMA)}, see=[Glossary:]{gamag}}
+
+% Glossary entries.
+\newglossaryentry{FFTLog}{name={FFTLog}, description={\href{http://casa.colorado.edu/~ajsh/FFTLog/}{FFTLog} is a code to compute fast Fourier transforms of discrete periodic sequences of logarithmically spaced data}}
+
+\newglossaryentry{component}{name={component}, description={An individual physical system within a \gls{node}, such as a dark matter halo, a galactic disk or a supermassive black hole}}
+
+\newglossaryentry{forest}{name={forest}, description={A collection of merger trees that are linked together by virtue of nodes which jump between trees}}
+
+\newglossaryentry{node}{name={node}, description={A single point in a merger tree, consisting of a dark matter halo and associated baryons}}
+
+\newglossaryentry{mergee}{name={mergee}, description={For a given node in a merger tree, the set of mergee nodes consists of all nodes which will undergo a galaxy merger with the node at some point in the future}}
+
+\newglossaryentry{primary progenitor}{name={primary progenitor}, description={The progenitor of a given \gls{node} which is regarding as the direct descendent of that \gls{node} (often, but not always, the most massive progenitor). Other progenitors are considered to merge into this primary progenitor}}
+
+\newglossaryentry{parent}{name={parent}, description={In a merger tree, the parent node of any given node that exists at time $t_0$ is that node to which it is directly connected in the tree at time $t_1>t_0$}}
+
+\newglossaryentry{Bernoulli distribution}{name={Bernoulli distribution}, description={A discrete probability distribution which takes value $1$ with success probability $p$ and value $0$ with failure probability $q = 1-p$. Read more on \href{http://en.wikipedia.org/wiki/Bernoulli_distribution}{Wikipedia}}}
+
+\newglossaryentry{UUID}{name={UUID}, description={A \href{http://en.wikipedia.org/wiki/Universally_unique_identifier}{universally unique identifier}---this is a label which uniquely identifies some object (in this case, a \glc\ model)}}
+
+\newglossaryentry{ABmagnitude}{name={AB magnitude}, description={An astronomical magnitude system in which the apparent magnitude is defined as $m=-2.5\log_{10}f-48.60$ for a flux density, $f$, measured in ergs per second per square centimeter per hertz}}
+
+\newglossaryentry{maggie}{name={maggie}, description={A unit of luminosity defined to be equal to the luminosity of a zeroth magnitude object in the \gls{ABmagnitude} system}}
+
+\newglossaryentry{forwardDescendent}{name={forward descendent}, description={The node with which the mass (or majority of the mass) of a node will become associated with at a later time. This type of descendent is usually relevant when considering how halos and galaxies evolve forward in time and should be distinguished from a \gls{backwardDescendent} which is relevant when building merger trees}}
+
+\newglossaryentry{backwardDescendent}{name={backward descendent}, description={The \gls{primary progenitor} of a node. This type of descendent is usually relevant when building merger trees and should be distinguished from a \gls{forwardDescendent} which is relevant when considering how halos and galaxies evolve forward in time}}
+
+\newglossaryentry{dmou}{name={dark matter-only universe}, description={Masses of nodes/halos are often defined as the mass which the node/halo would have in a dark matter-only universe in which the total matter density is the same as the actual model universe, but in which no baryons are present (i.e. all matter is dark matter)}}
+
+\newglossaryentry{MD5hash}{name={MD5 hash}, description={The \href{http://en.wikipedia.org/wiki/MD5}{MD5 Message-Digest Algorithm} is a widely used cryptographic hash function that produces a 128-bit (16-byte) hash value. In \glc\ it is used to encode unique labels for modules which are incorporated into file names. \glc\ uses the \href{http://www.gnu.org/software/libc/}{\normalfont \ttfamily glibc} \href{http://en.wikipedia.org/wiki/Crypt_(Unix)}{\normalfont \ttfamily crypt()} function to compute MD5 hashes, but switches ``{\normalfont \ttfamily /}'' for ``{\normalfont \ttfamily @}'' in the hash (since ``{\normalfont \ttfamily /}'' is inconvenient for use in file names)}}
+
+\newglossaryentry{LymanContinuum}{name={Lyman continuum}, description={The part of the electromagnetic spectrum which is capable of ionizing hydrogen, i.e. photons with wavelengths shorter than 91.1267~nanometres and with energy above 13.6~eV}}
+
+\newglossaryentry{millenniumSimulation}{name={Millennium Simulation}, description={The \href{http://www.mpa-garching.mpg.de/galform/virgo/millennium/}{Millennium Simulation} is a high-resolution N-body simulation of structure formation in a cold dark matter universe.}}
+
+\newglossaryentry{openmp}{name={OpenMP}, description={\href{http://www.openmp.org/}{OpenMP} is an API for shared memory parallel programming.}}
+
+\newglossaryentry{yeppp}{name={YEPPP!}, description={The \href{http://www.yeppp.info/}{Yeppp!} library provides high-performance SIMD-optimized mathematical functions optimized for a variety of architectures.}}
+
+\newglossaryentry{graphviz}{name={GraphViz}, description={\href{http://www.graphviz.org/}{\normalfont \scshape GraphViz} is an open source graph visualization package. It is used by \glc\ in making diagrams of merger trees.}}
+
+\newglossaryentry{latinhypercube}{name={Latin hypercube}, description={A \href{http://en.wikipedia.org/wiki/Latin_hypercube_sampling}{Latin hypercube} is a construct for generating a sample of plausible collections of parameter values from a multidimensional distribution}}
+
+\newglossaryentry{deadlock}{name={deadlock}, description={A deadlock describes a situation in which no node in a merger tree (or forest) can be evolved further forward in time due to the existence of circular dependencies between nodes. Deadlocks can occur due to incompatible parameter choices, or may indicate a bug in \glc.}}
+
+\newglossaryentry{maximin}{name={maximin}, description={In \gls{latinhypercube} design, the ``maximin'' approach generates a large number of \glspl{latinhypercube} and selects the one which has the greatest minimum distance between all pairs of points in the hypercube}}
+
+\newglossaryentry{mangle}{name={{\normalfont \scshape mangle}}, description={\href{http://space.mit.edu/~molly/mangle/}{\normalfont \scshape mangle} is a software package used for defining angular masks on the surface of a sphere. It is used primarily for defining the geometry of galaxy surveys}}
+
+\newglossaryentry{irate}{name={IRATE}, description={\href{http://www.physics.uci.edu/~etolleru/irate-docs/formatspec.html}{IRATE} is file format designed for N-body simulation particle, halo, merger tree, and galaxy data}}
+
+\newglossaryentry{ann}{name={Approximate Nearest Neighbor}, description={The \href{http://www.cs.umd.edu/~mount/ANN/}{\normalfont \scshape Approximate Nearest Neighbor} library is a software package used finding the closest set of points to a given point, approximately}}
+
+\newglossaryentry{enzo}{name={ENZO}, description={\href{http://enzo-project.org/}{Enzo} is an adaptive mesh refinement hydrodynamics code}}
+
+\newglossaryentry{adafg}{name={ADAF},
+    description={An advection-dominated accretion flow (ADAF) is a particular solution for an accretion flow around a black hole, star or compact object in which energy liberated by viscous forces is stored within the accretion flow and advected inward to the central object (see \citealt{narayan_advection-dominated_1998})}}
+
+\newglossaryentry{pahg}{name={PAH},
+    description={\href{http://en.wikipedia.org/wiki/Polycyclic_aromatic_hydrocarbon}{Polycyclic aromatic hydrocarbons} (PAH) are large organic molecules consisting of fused aromatic rings}}
+
+\newglossaryentry{dslg}{name={DSL},
+    description={\href{http://en.wikipedia.org/wiki/Domain-specific_language}{Domain-specific languages} (DSL) are a type of programming language dedicated to a particular problem. In \glc\ a DSL is used to specify the structure of \glspl{component}}}
+
+\newglossaryentry{cdmg}{name={CDM},
+    description={\href{http://en.wikipedia.org/wiki/Cold_dark_matter}{Cold dark matter} (CDM) is a hypothesized type of dark matter in which the particles move slowly compared to the speed of light}}
+
+\newglossaryentry{wdmg}{name={WDM},
+    description={\href{http://en.wikipedia.org/wiki/Warm_dark_matter}{Warm dark matter} (WDM) is a hypothesized type of dark matter in which the particle has non-negligible thermal velocity at decoupling}}
+
+\newglossaryentry{samg}{name={SAM},
+    description={Semi-analytic models (SAMs) are a type of galaxy formation model utilizing simple parameterizations of physical processes to follow the evolution of galaxies through a merging hierarchy of galaxies.}}
+
+\newglossaryentry{ahfg}{name={AHF},
+    description={\href{http://popia.ft.uam.es/AHF/files/AHF.pdf}{Amiga's Halo Finder} (AHF) is a software package which identifies dark matter halos in N-body simulations. Full details are given by \cite{gill_evolution_2004} and \cite{knollmann_ahf:_2009}}}
+
+\newglossaryentry{hodg}{name={HOD},
+    description={A halo occupation distribution (HOD) is a mathematical model describing the distribution of the number of galaxies (of some given physical properties) found in a dark matter halo of given mass.}}
+
+\newglossaryentry{hdf5g}{name={HDF5},
+    description={The \href{https://www.hdfgroup.org/HDF5/}{hierarhical data format} (version 5; HDF5) is a file format designed for storing scientific data.}}
+
+\newglossaryentry{bieg}{name={BIE},
+    description={The \href{http://www.astro.umass.edu/BIE/}{Bayesian Inference Engine} (BIE) is a software package designed to facilitate exploration of complexes parameter spaces using Bayesian techniques.}}
+
+\newglossaryentry{mpig}{name={MPI},
+    description={\href{http://en.wikipedia.org/wiki/Message_Passing_Interface}{Message Passing Interface} (MPI) is a standard for passing messages between processes on parallel computers.}}
+
+\newglossaryentry{pbsg}{name={PBS},
+    description={\href{http://en.wikipedia.org/wiki/Portable_Batch_System}{Portable Batch System} (PBS) is a job scheduler used on many compute cluster environments.}}
+
+\newglossaryentry{pdfg}{name={PDF},
+    description={\href{http://en.wikipedia.org/wiki/Probability_density_function}{Probability Density Function} (PDF) is a function which describes the probability for a random variable to take on a given value.}}
+
+\newglossaryentry{cdfg}{name={CDF},
+    description={\href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{Cumulative Distribution Function} (CDF) is a function which describes the cumulative probability for a random variable to be equal to or less than a given value.}}
+
+\newglossaryentry{gslg}{name={GSL},
+    description={\href{http://www.gnu.org/software/gsl/}{GNU Scientific Library} (GSL) is a library providing a variety of numerical algorithms.}}
+
+\newglossaryentry{gamag}{name={GAMA},
+    description={The \href{http://www.gama-survey.org/}{Galaxy and Mass Assembly} (GAMA) survey is a spectroscopic survey of $\approx 300,000$ galaxies down to r $<$ 19.8 mag over $\approx 286$ deg$^2$.}}
+
+\newglossaryentry{cloudy}{name={Cloudy}, description={\href{http://www.nublado.org/}{Cloudy} is a code to compute the ionization structure of HII regions}}
