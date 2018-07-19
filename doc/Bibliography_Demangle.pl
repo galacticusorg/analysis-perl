@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Cwd;
-use lib $ENV{'GALACTICUS_EXEC_PATH'}."/perl";
+use lib $ENV{'GALACTICUS_ANALYSIS_PERL_PATH'}."/perl";
 
 # Demangle the Galacticus bibliography to convert accents (and other symbols) to LaTeX syntax.
 # Andrew Benson (27 February 2011)
