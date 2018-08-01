@@ -4,11 +4,11 @@ This chapter contains step-by-step guides to performing common tasks with \glc.
 
 \section{Running \glc\ on N-body Merger Trees}\label{sec:nBodyRun}\index{merger trees!N-body}\index{N-body!merger trees}
 
-See \S\ref{sec:MergerTreeBuilder} for details of how to build merger tree files suitable for input into \glc. There are many options which control precisely how merger trees read from file should be handled. The following section provides guidance on the best choice of parameters.
+See \S\ref{main-sec:MergerTreeBuilder} for details of how to build merger tree files suitable for input into \glc. There are many options which control precisely how merger trees read from file should be handled. The following section provides guidance on the best choice of parameters.
 
 \subsection{Setting Input Parameters}
 
-To utilize merger trees from the file\footnote{The following assumes that merger trees will be read from a file following \protect\glc's standard HDF5 format which is described in Appendix~\protect\ref{sec:MergerTreeFileFormat}.} that you created in a \glc\ run it's necessary to set two parameters in the input parameter file that you will use for the run:
+To utilize merger trees from the file\footnote{The following assumes that merger trees will be read from a file following \protect\glc's standard HDF5 format which is described in Appendix~\protect\ref{main-sec:MergerTreeFileFormat}.} that you created in a \glc\ run it's necessary to set two parameters in the input parameter file that you will use for the run:
 \begin{verbatim}
   <!-- Specify that merger trees are to be read from file, and give the name of the file to read -->
   <mergerTreeConstructMethod value="read"             />
@@ -91,7 +91,7 @@ If your trees do not contain position information recommended settings are:
 <mergerTreeReadPresetOrbitsAssertAllSet value="true"/>
 <mergerTreeReadPresetOrbitsBoundOnly    value="true"/>
 \end{verbatim}
-These options will cause an orbit to be preset for each subhalo based on the relative position and velocity of merging halos and assuming that the orbital energy and angular momentum are conserved between the time immediately prior to the merger and the time of virial radius crossing. If the computed orbit does not cross the virial radius of the larger halo or if the computed orbit is unbound, the above options cause an orbit to be preset by drawing orbital parameters at random from the chosen cosmological distribution (see \S\ref{sec:SatelliteVirialOrbits}).
+These options will cause an orbit to be preset for each subhalo based on the relative position and velocity of merging halos and assuming that the orbital energy and angular momentum are conserved between the time immediately prior to the merger and the time of virial radius crossing. If the computed orbit does not cross the virial radius of the larger halo or if the computed orbit is unbound, the above options cause an orbit to be preset by drawing orbital parameters at random from the chosen cosmological distribution (see \S\ref{main-sec:SatelliteVirialOrbits}).
 
 {\normalfont \bfseries Subhalo Merging:} If your merger trees contain subhalo information, that information can be used to specify when, and with which other node, each subhalo merges. Specifically, a subhalo is assumed to merge at the time at which it is not the primary progenitor of its descendent halo---possibly with some other delay to be described below. Recommended settings are:
 \begin{verbatim}
@@ -99,7 +99,7 @@ These options will cause an orbit to be preset for each subhalo based on the rel
 <mergerTreeReadPresetMergerNodes          value="true"             />
 <mergerTreeReadSubresolutionMergingMethod value="boylanKolchin2008"/>
 \end{verbatim}
-The first two options cause subhalos to merge at the time described above, and with their descendent node. The final option accounts for the possibility that the subhalo should not actually merge immediately at this time. For example, in N-body simulations, the subhalo may have simply been lost due to limitations of resolution or halo finder algorithms. The final option specifies that some additional time until merging be added based on the subhalo merging timescale algorithm of \citeauthor{boylan-kolchin_dynamical_2008}~[\citeyear{boylan-kolchin_dynamical_2008}; see \S\ref{phys:satelliteMergingTimescales:satelliteMergingTimescalesBoylanKolchin2008}], and computed using the last known orbital properties of the subhalo.
+The first two options cause subhalos to merge at the time described above, and with their descendent node. The final option accounts for the possibility that the subhalo should not actually merge immediately at this time. For example, in N-body simulations, the subhalo may have simply been lost due to limitations of resolution or halo finder algorithms. The final option specifies that some additional time until merging be added based on the subhalo merging timescale algorithm of \citeauthor{boylan-kolchin_dynamical_2008}~[\citeyear{boylan-kolchin_dynamical_2008}; see \S\ref{main-phys:satelliteMergingTimescales:satelliteMergingTimescalesBoylanKolchin2008}], and computed using the last known orbital properties of the subhalo.
 
 {\normalfont \bfseries Halo Scale Radii:} If your merger trees contain information on halo scale radii or half-mass radii, these can be used to preset the scale radius of each \gls{node}. This requires the use of a dark matter profile component which allows presetting of scale length. Recommended settings are therefore:
 \begin{verbatim}
@@ -111,7 +111,7 @@ The first two options cause subhalos to merge at the time described above, and w
 \end{verbatim}
 Minimum and maximum concentrations are specified---these are used to restrict the range of scale radii that are allowed for a given halo. If scale radii are to be determined based on half-mass radii given in the merger tree file, and if the computed scale radius does not result in a concentration between these limits, then a fatal error is issued.
 
-Finally, you can set a minimum halo mass via the {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiMinimumMass]} parameter below which the scale radii or half-mass radii in your file should be considered not reliable. For halos below this mass, scale radii will instead be assigned via the selected dark matter halo concentration method (see \S\ref{sec:DarkMatterProfileConcentration}).
+Finally, you can set a minimum halo mass via the {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiMinimumMass]} parameter below which the scale radii or half-mass radii in your file should be considered not reliable. For halos below this mass, scale radii will instead be assigned via the selected dark matter halo concentration method (see \S\ref{main-sec:DarkMatterProfileConcentration}).
 
 {\normalfont \bfseries Halo Angular Momenta:} If your merger trees contain spin or angular momentum information these can be preset for each node. Recommended settings are:
 \begin{verbatim}
@@ -119,7 +119,7 @@ Finally, you can set a minimum halo mass via the {\normalfont \ttfamily [mergerT
 <mergerTreeReadPresetSpins           value="true"  />
 <mergerTreeReadPresetUnphysicalSpins value="true"  />
 \end{verbatim}
-The last of these options causes any halos for which the spin given in the merger tree file is non-positive to be assigned a spin at random instead, drawn from the specified cosmological distribution (see \S\ref{sec:SpinParameterDistribution}).
+The last of these options causes any halos for which the spin given in the merger tree file is non-positive to be assigned a spin at random instead, drawn from the specified cosmological distribution (see \S\ref{main-sec:SpinParameterDistribution}).
 
 If subhalo masses are not included in their host halo masses in your merger tree file, you should specify how the angular momenta of subhalos should be accounted for when adding their mass to their host halo. If positions and 3D angular momenta are available in your merger tree file, the recommended setting is:
 \begin{verbatim}
@@ -200,7 +200,7 @@ In addition to setting the times of merger events, it is possible to set the tar
 \end{verbatim}
 will cause the target node with which each merger should occur to be determined from the merger tree structure and preset for use in \glc.
 
-It is possible to add a delay between the last time at which a subhalo was seen in a simulation and the time at which it is considered to merge. This functionality is motivated by the consideration that a subhalo vanishing from a simulation may be simply due to it dropping below resolution rather than it actually having undergone a merger. The parameter {\normalfont \ttfamily [mergerTreeReadSubresolutionMergingMethod]} can be used to select a satellite merging timescale method (see \S\ref{sec:SatelliteMergingTimescales}) to use in this case. (It is set by default to ``{\normalfont \ttfamily null}'' such that no delay before merging occurs.) The orbit of the subhalo around its parent at the last time it is present in the merger tree is passed to this method and used to estimate a time until merging. This delay is added to the time at which the subhalo merges and, if merge target nodes are being set, the target node is updated accordingly.
+It is possible to add a delay between the last time at which a subhalo was seen in a simulation and the time at which it is considered to merge. This functionality is motivated by the consideration that a subhalo vanishing from a simulation may be simply due to it dropping below resolution rather than it actually having undergone a merger. The parameter {\normalfont \ttfamily [mergerTreeReadSubresolutionMergingMethod]} can be used to select a satellite merging timescale method (see \S\ref{main-sec:SatelliteMergingTimescales}) to use in this case. (It is set by default to ``{\normalfont \ttfamily null}'' such that no delay before merging occurs.) The orbit of the subhalo around its parent at the last time it is present in the merger tree is passed to this method and used to estimate a time until merging. This delay is added to the time at which the subhalo merges and, if merge target nodes are being set, the target node is updated accordingly.
 
 \subsubsection{Subhalo Indices}
 
@@ -242,7 +242,7 @@ the spin vector of each node will be set (assuming that the vector spin or angul
  \mathbf{\lambda} = {\mathbf{J} |E|^{1/2} \over \mathrm{G} M^{5/2}}.
 \end{equation}
 
-If spins could not be determined for some halos the spin (or angular momentum) should be set to zero in the merger tree file, and the parameter {\normalfont \ttfamily [mergerTreeReadPresetUnphysicalSpins]} set to {\normalfont \ttfamily true}. \glc\ will then assign a spin to such halos by sampling from the selected spin distribution (see \S\ref{sec:SpinParameterDistribution}). 
+If spins could not be determined for some halos the spin (or angular momentum) should be set to zero in the merger tree file, and the parameter {\normalfont \ttfamily [mergerTreeReadPresetUnphysicalSpins]} set to {\normalfont \ttfamily true}. \glc\ will then assign a spin to such halos by sampling from the selected spin distribution (see \S\ref{main-sec:SpinParameterDistribution}). 
 
 \subsubsection{Node Scale Radii}
 
@@ -252,7 +252,7 @@ If information on the half-mass or scale radii of nodes is available in the merg
   <mergerTreeReadPresetScaleRadii value="true"/>
 \end{verbatim}
 
-Before doing this, it is important to be sure that the half-mass or scale radii of the nodes are reliable. For example, in low mass nodes extracted from an N-body simulation resolution effect may limit the accuracy of the measured half-mass or scale radius. In such cases, use the {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiMinimumMass]} parameter to specify the lowest mass halos for which the scale radii should be preset---lower mass halos will be assigned a scale radius using the method specified by the {\normalfont \ttfamily [mergerTreeReadConcentrationFallbackMethod]} parameter (which will default to the value of {\normalfont \ttfamily [darkMatterConcentrationMethod]}; see \S\ref{sec:DarkMatterProfileConcentration}). It is also possible to specify minimum and maximum allowed concentrations when computing the scale radius from the half mass radius using the {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiConcentrationMinimum]} and {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiConcentrationMaximum]} parameters. If matching the half mass radius would require a concentration outside of this range, \glc\ will abort unless {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiFailureIsFatal]}$=${\normalfont \ttfamily false}, in which case it will instead silently use the fallback concentration method described above.
+Before doing this, it is important to be sure that the half-mass or scale radii of the nodes are reliable. For example, in low mass nodes extracted from an N-body simulation resolution effect may limit the accuracy of the measured half-mass or scale radius. In such cases, use the {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiMinimumMass]} parameter to specify the lowest mass halos for which the scale radii should be preset---lower mass halos will be assigned a scale radius using the method specified by the {\normalfont \ttfamily [mergerTreeReadConcentrationFallbackMethod]} parameter (which will default to the value of {\normalfont \ttfamily [darkMatterConcentrationMethod]}; see \S\ref{main-sec:DarkMatterProfileConcentration}). It is also possible to specify minimum and maximum allowed concentrations when computing the scale radius from the half mass radius using the {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiConcentrationMinimum]} and {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiConcentrationMaximum]} parameters. If matching the half mass radius would require a concentration outside of this range, \glc\ will abort unless {\normalfont \ttfamily [mergerTreeReadPresetScaleRadiiFailureIsFatal]}$=${\normalfont \ttfamily false}, in which case it will instead silently use the fallback concentration method described above.
 
 If only half-mass radii are available, the scale radius is set by using a root finding algorithm to ensure that half of the total halo mass is enclosed within the specified half-mass radius.
 
@@ -294,7 +294,7 @@ To add particle tracking data to a merger tree file, follow these steps:
 \item Identify all subhalos which are lost from the simulation prior to the final timestep;
 \item Determine the index of the most bound particle in each such subhalo in the last timestep in which it was identified;
 \item For each subhalo, extract the redshift, position, and velocity of that particle (which is usally trivial to do once its index is known) at each subsequent timestep in the simulation;
-\item Write these data (along with the particle index) to the {\normalfont \ttfamily particles} group in the merger tree file as described in \S\ref{sec:MergerTreeFormatDescription:Particles};
+\item Write these data (along with the particle index) to the {\normalfont \ttfamily particles} group in the merger tree file as described in \S\ref{main-sec:MergerTreeFormatDescription:Particles};
 \item Add two datasets to the {\normalfont \ttfamily forestHalos} group:
   \begin{enumerate}
   \item {\normalfont \ttfamily particleIndexStart} which should indicate the index in the datasets in the {\normalfont \ttfamily particles} group at which the data for each halo begins (or $-1$ if no particle data is included for the halo);
@@ -336,7 +336,7 @@ Suppose that you want to create a catalog of galaxies as would be found in a sur
 
 Generating such a mock catalog using \glc\ involves first extracting the halos (and their merger trees) within this ``lightcone'' from a suitable N-body simulation, and then processing them through \glc. In this tutorial, we will specifically make use of the \href{http://gavo.mpa-garching.mpg.de/MyMillennium3/MyDB}{Millennium Simulation database} to provide the merger trees, but the same principles apply to any N-body simulation.
 
-The script, {\normalfont \ttfamily scripts/aux/Millennium\_Lightcone\_Grab.pl} can be used to retrieve merger trees that intersect a given lightcone from the Millennium Database and to store them in \glc's format (see \S\ref{sec:MergerTreeFileFormat}). The script is used as follows:
+The script, {\normalfont \ttfamily scripts/aux/Millennium\_Lightcone\_Grab.pl} can be used to retrieve merger trees that intersect a given lightcone from the Millennium Database and to store them in \glc's format (see \S\ref{main-sec:MergerTreeFileFormat}). The script is used as follows:
 \begin{verbatim}
 scripts/aux/Millennium_Lightcone_Grab.pl <lightconeDirectory> <fieldSize> <maximumRedshift>
     --user <myUserName> --password <myPassword> --treesPerFile <treesPerFile>
@@ -387,7 +387,7 @@ Each of the merger tree files created can then be run through \glc\ in the usual
   />
 </geometryLightconeMethod>
 \end{verbatim}
-In the above {\normalfont \ttfamily [outputLightconeData]} causes lightcone coordinate information (i.e. the position and velocity of each galaxy in a coordinate system with axes aligned along the line of sight of the lightcone and parallel to the two edges of the square field of view, along with the redshift) to be output (see \S\ref{sec:OutputLightcone}), and {\normalfont \ttfamily [mergerTreeOperatorMethod]} is set to {\normalfont \ttfamily pruneLightcone} to cause any merger trees which have no nodes within the lightcone volume to be pruned away (as there is no need to process them). Finally, the {\normalfont \ttfamily geometryLightconeMethod} parameter describes the geometry of the lightcone to be used---see \S\ref{sec:methodsGeometryLightcone} for details.
+In the above {\normalfont \ttfamily [outputLightconeData]} causes lightcone coordinate information (i.e. the position and velocity of each galaxy in a coordinate system with axes aligned along the line of sight of the lightcone and parallel to the two edges of the square field of view, along with the redshift) to be output (see \S\ref{main-sec:OutputLightcone}), and {\normalfont \ttfamily [mergerTreeOperatorMethod]} is set to {\normalfont \ttfamily pruneLightcone} to cause any merger trees which have no nodes within the lightcone volume to be pruned away (as there is no need to process them). Finally, the {\normalfont \ttfamily geometryLightconeMethod} parameter describes the geometry of the lightcone to be used---see \S\ref{main-sec:methodsGeometryLightcone} for details.
 
 \section{Using the Instantaneous Recycling Approximation}\index{recycling!instantaneous}\index{instantaneous recycling approximation}
 
@@ -505,9 +505,9 @@ would result in datasets {\normalfont \ttfamily diskLuminositiesStellar:SDSS\_r:
 
 Stellar luminosities are computed by convolving a library of simple stellar populations with the star formation history of each galaxy. \glc\ allows the spectra of those simple stellar populations to be postprocessed (after being read from file or internally generated for example) before they are utilized in the convolution integral. This postprocessing can modify the spectra in arbitrary ways that depend on wavelength, redshift, and age of stellar population. Furthermore, \glc\ allows you to chain together stellar spectra postprocessors into a set to allow multiple postprocessings to be applied. Furthermore again, you can define an arbitrary number of sets and apply different sets to different luminosities.
 
-Typical uses of stellar spectra postprocessors include accounting for absorption of galaxy light by the intervening \gls{igm}, or capturing only the light from recent star formation\footnote{Perhaps so that additional dust extinction can be applied to the light of recently formed stars.}. A full list of the available postprocessors can be found in \S\ref{sec:StellarSpectraPostprocessing}.
+Typical uses of stellar spectra postprocessors include accounting for absorption of galaxy light by the intervening \gls{igm}, or capturing only the light from recent star formation\footnote{Perhaps so that additional dust extinction can be applied to the light of recently formed stars.}. A full list of the available postprocessors can be found in \S\ref{main-sec:StellarSpectraPostprocessing}.
 
-If you don't specify a postprocessing set, the ``default'' set (consisting of the {\normalfont \ttfamily inoue2014} postprocessor; see \S\ref{phys:spectraPostprocessor:spectraPostprocessorInoue2014}) is applied to each luminosity calculation. To specify other postprocessing sets add the following to your parameter file:
+If you don't specify a postprocessing set, the ``default'' set (consisting of the {\normalfont \ttfamily inoue2014} postprocessor; see \S\ref{main-phys:spectraPostprocessor:spectraPostprocessorInoue2014}) is applied to each luminosity calculation. To specify other postprocessing sets add the following to your parameter file:
 \begin{verbatim}
  <luminosityPostprocessSet value="default recent unabsorbed recentUnabsorbed"/>
 \end{verbatim}
