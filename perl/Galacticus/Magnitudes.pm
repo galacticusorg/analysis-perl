@@ -14,9 +14,10 @@ use Galacticus::Luminosities;
 use Galacticus::Survey;
 
 %Galacticus::HDF5::galacticusFunctions = ( %Galacticus::HDF5::galacticusFunctions,
-    "^magnitude([^:]+):([^:]+):([^:]+):z([\\d\\.]+)(:dust[^:]+)?(:vega|:AB)?" => \&Galacticus::Magnitudes::Get_Magnitude                 ,
-    "^magnitude:.*(:vega|:AB)?"                                               => \&Galacticus::Magnitudes::Get_Generic_Magnitude         ,
-    "^apparentMagnitude:.*"                                                   => \&Galacticus::Magnitudes::Get_Generic_Apparent_Magnitude
+    "^magnitude([^:]+):([^:]+):([^:]+):z([\\d\\.]+)(:dust[^:]+)?(:vega|:AB)?"         => \&Galacticus::Magnitudes::Get_Magnitude                 ,
+    "^apparentMagnitude([^:]+):([^:]+):([^:]+):z([\\d\\.]+)(:dust[^:]+)?(:vega|:AB)?" => \&Galacticus::Magnitudes::Get_Apparent_Magnitude        ,
+    "^magnitude:.*(:vega|:AB)?"                                                       => \&Galacticus::Magnitudes::Get_Generic_Magnitude         ,
+    "^apparentMagnitude:.*"                                                           => \&Galacticus::Magnitudes::Get_Generic_Apparent_Magnitude
     );
 
 my %vegaOffsets;
@@ -66,6 +67,16 @@ sub Get_Magnitude {
     } else {
 	die("Get_Magnitude(): unable to parse data set: ".$dataSetName);
     }
+}
+
+sub Get_Apparent_Magnitude {
+    my $dataSet     = shift;
+    my $dataSetName = $_[0];
+    # Construct the name of the corresponding absolute magnitude property.
+    (my $absoluteMagnitudeDataset = $dataSetName) =~ s/^apparentMagnitude/magnitude/;
+    &Galacticus::HDF5::Get_Dataset($dataSet,[$absoluteMagnitudeDataset,"distanceModulus"]);
+    my $dataSets = $dataSet->{'dataSets'};
+    $dataSets->{$dataSetName} = $dataSets->{$absoluteMagnitudeDataset}+$dataSets->{'distanceModulus'};
 }
 
 sub Get_Generic_Magnitude {
