@@ -47,8 +47,10 @@ sub Get_Amplification {
 	H0           => $hubble0
 	);
 
+    # Determine dynamic data path.
+    my $dataDynamicPath = exists($ENV{'GALACTICUS_DYNAMIC_DATA_PATH'}) ? $ENV{'GALACTICUS_DYNAMIC_DATA_PATH'} : $ENV{'GALACTICUS_DATA_PATH'};
     # Construct the name of a file to which the lensing PDFs can be stored.
-    my $lensingPdfDirectory = $ENV{'GALACTICUS_DATA_PATH'}."/dynamic/gravitationalLensingPDFs";
+    my $lensingPdfDirectory = $dataDynamicPath."/dynamic/gravitationalLensingPDFs";
     system("mkdir -p ".$lensingPdfDirectory);
     my $omegaM0fixedPrecision  = sprintf("%6.4f",$omegaM0 );
     my $omegaDE0fixedPrecision = sprintf("%6.4f",$omegaDE0);
