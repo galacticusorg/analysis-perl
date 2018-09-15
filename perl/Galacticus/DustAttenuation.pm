@@ -32,14 +32,14 @@ my  $spheroidInclinationIndices;
 our $diskOpticalDepths;
 my  $diskOpticalDepthsCount;
 my  $diskOpticalDepthsIndices;
-my  $spheroidOpticalDepths;
+our $spheroidOpticalDepths;
 my  $spheroidOpticalDepthsCount;
 my  $spheroidOpticalDepthsIndices;
-my  $spheroidSizes;
+our $spheroidSizes;
 my  $spheroidSizesCount;
 my  $spheroidSizeIndices;
 our $diskAttenuations;
-my  $spheroidAttenuations;
+our $spheroidAttenuations;
 
 sub Get_Dust_Attenuated_Luminosity {
     my $dataSet     = shift;
@@ -132,22 +132,36 @@ sub Get_Dust_Attenuated_Luminosity {
     &Galacticus::HDF5::Get_Dataset($dataSet,\@propertyList);
     my $dataSets = $dataSet->{'dataSets'};
 
+    # Read effective wavelengths of filters.
+    my $filtersGroup               = $dataSet     ->{'hdf5File'}->group  ('Filters'            )       ;
+    my $filterNames                = $filtersGroup              ->dataset('name'               )->get();
+    my $filterEffectiveWavelengths = $filtersGroup              ->dataset('wavelengthEffective')->get();
+ 
     # Ensure we have an effective wavelength and a wavelength index for this filter.
     unless ( exists($effectiveWavelength{$filterLabel}) ) {
-	my $filterPath = $ENV{'GALACTICUS_DATA_PATH'}."/static/filters/".$filter.".xml";
-	die("Get_Dust_Attenuated_Luminosity(): can not find filter file for: ".$filter) unless ( -e $filterPath );
-	my $xml = new XML::Simple;
-	my $filterData = $xml->XMLin($filterPath);
-	unless ( exists($filterData->{'effectiveWavelength'}) ) {
-	    # No effective wavelength data available for filter - run the script that computes it.
-	    system($ENV{'GALACTICUS_EXEC_PATH'}."/scripts/filters/vega_offset_effective_lambda.pl");
-	    $filterData = $xml->XMLin($filterPath);
-	    die ("Get_Dust_Attenuated_Luminosity(): failed to compute effective wavelengths for filters") unless ( exists($filterData->{'effectiveWavelength'}) );
+	my $wavelengthEffective;
+	for(my $i=0;$i<nelem($filterEffectiveWavelengths);++$i) {
+	    (my $filterName = $filterNames->atstr($i,0)) =~ s/\s//g;
+	    $wavelengthEffective = $filterEffectiveWavelengths->(($i))
+		if ( $filterName eq $filter );
+	}
+	unless ( defined($wavelengthEffective) ) {
+	    my $filterPath = $ENV{'GALACTICUS_DATA_PATH'}."/static/filters/".$filter.".xml";
+	    die("Get_Dust_Attenuated_Luminosity(): can not find filter file for: ".$filter) unless ( -e $filterPath );
+	    my $xml = new XML::Simple;
+	    my $filterData = $xml->XMLin($filterPath);
+	    unless ( exists($filterData->{'effectiveWavelength'}) ) {
+		# No effective wavelength data available for filter - run the script that computes it.
+		system($ENV{'GALACTICUS_EXEC_PATH'}."/scripts/filters/vega_offset_effective_lambda.pl");
+		$filterData = $xml->XMLin($filterPath);
+		die ("Get_Dust_Attenuated_Luminosity(): failed to compute effective wavelengths for filters") unless ( exists($filterData->{'effectiveWavelength'}) );
+	    }
+	    $wavelengthEffective = pdl $filterData->{'effectiveWavelength'};
 	}
 	if ( $frame eq "rest" ) {
-	    $effectiveWavelength{$filterLabel} = pdl $filterData->{'effectiveWavelength'};
+	    $effectiveWavelength{$filterLabel} = $wavelengthEffective                ;
 	} else {
-	    $effectiveWavelength{$filterLabel} = pdl $filterData->{'effectiveWavelength'}/(1.0+$redshift);
+	    $effectiveWavelength{$filterLabel} = $wavelengthEffective/(1.0+$redshift);
 	}
 	($wavelengthIndex{$filterLabel}, my $error) = interpolate(log($effectiveWavelength{$filterLabel}),log($wavelengths),$wavelengthIndices);    
     }
