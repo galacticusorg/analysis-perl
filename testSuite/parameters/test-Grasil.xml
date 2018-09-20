@@ -11,6 +11,7 @@
   <pbs>
     <ompThreads>16</ompThreads>
     <maxJobsInQueue>40</maxJobsInQueue>
+    <executable>Galacticus_noMPI.exe</executable>
   </pbs>
   <parameters>
     <formatVersion>2</formatVersion>
