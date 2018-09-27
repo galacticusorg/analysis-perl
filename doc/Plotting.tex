@@ -69,7 +69,7 @@ The ODG option requires that both \href{http://www.cityinthesky.co.uk/opensource
 
 \section{Merger Tree Diagrams with {\normalfont \scshape dot}}\index{merger trees!graphing}
 
-The {\normalfont \scshape dot} command, which is a part of \href{http://www.graphviz.org/}{{\normalfont \scshape GraphViz}}\index{graphviz@{\normalfont \scshape GraphViz}} is useful for creating diagrams of merger trees. \glc\ provides a function to output the structure of any merger tree in {\normalfont \scshape GraphViz} format. This function, \hyperlink{objects.merger_trees.dump.F90:merger_trees_dump:merger_tree_dump}{{\normalfont \ttfamily Merger\_Tree\_Dump}}, is provided by the \hyperlink{objects.merger_trees.dump.F90:merger_trees_dump:merger_tree_dump}{{\normalfont \ttfamily Merger\_Trees\_Dump}} module. Usage is as follows:
+The {\normalfont \scshape dot} command, which is a part of \href{http://www.graphviz.org/}{{\normalfont \scshape GraphViz}}\index{graphviz@{\normalfont \scshape GraphViz}} is useful for creating diagrams of merger trees. \glc\ provides a function to output the structure of any merger tree in {\normalfont \scshape GraphViz} format. This function, {\normalfont \ttfamily Merger\_Tree\_Dump}, is provided by the {\normalfont \ttfamily Merger\_Trees\_Dump} module. Usage is as follows:
 \begin{lstlisting}[escapechar=@,breaklines,prebreak=\&,postbreak=\&]
 call Merger_Tree_Dump(                                    &
      &                index                             , &
@@ -88,7 +88,7 @@ call Merger_Tree_Dump(                                    &
      &                path               ='/my/path'      &
      &               )
 \end{lstlisting}
-Here {\normalfont \ttfamily index} is the tree index (successive calls to \hyperlink{objects.merger_trees.dump.F90:merger_trees_dump:merger_tree_dump}{{\normalfont \ttfamily Merger\_Tree\_Dump}} with the same index will result in a sequence of output files---see below), and {\normalfont \ttfamily baseNode} is a pointer to the base node of the tree to be dumped. All other arguments are optional:
+Here {\normalfont \ttfamily index} is the tree index (successive calls to {\normalfont \ttfamily Merger\_Tree\_Dump} with the same index will result in a sequence of output files---see below), and {\normalfont \ttfamily baseNode} is a pointer to the base node of the tree to be dumped. All other arguments are optional:
 \begin{description}
  \item [{\normalfont \ttfamily highlightNodes}] A list of node IDs. All nodes listed will be highlighted in the diagram;
  \item [{\normalfont \ttfamily backgroundColor}] The color for the background of the diagram;
