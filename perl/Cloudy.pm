@@ -11,7 +11,8 @@ sub Initialize {
     # Specify Cloudy version.
     my $cloudyVersion = "c13.05";
     # Specify Cloudy path.
-    my $cloudyPath    = &galacticusPath()."aux/".$cloudyVersion;
+    system("mkdir -p ".$ENV{'GALACTICUS_DATA_PATH'}."/dynamic/cloudy");
+    my $cloudyPath    = $ENV{'GALACTICUS_DATA_PATH'}."/dynamic/cloudy/".$cloudyVersion;
     # Download the code.
     unless ( -e $cloudyPath.".tar.gz" ) {
 	print "Cloudy::Initialize: downloading Cloudy code.\n";
@@ -22,7 +23,7 @@ sub Initialize {
     # Unpack the code.
     unless ( -e $cloudyPath ) {
 	print "Cloudy::Initialize: unpacking Cloudy code.\n";
-	system("tar -x -v -z -C aux -f ".$cloudyPath.".tar.gz");
+	system("tar -x -v -z -C ".$ENV{'GALACTICUS_DATA_PATH'}."/dynamic/cloudy -f ".$cloudyPath.".tar.gz");
 	die("Cloudy::Initialize: FATAL - failed to unpack Cloudy code.")
 	    unless ( -e $cloudyPath );
     }    
