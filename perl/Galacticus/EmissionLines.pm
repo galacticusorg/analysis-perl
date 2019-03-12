@@ -63,6 +63,8 @@ our $hydrogenOneIonizationEnergy = pdl 13.5990000000000000e+00; # eV
 our $heliumOneIonizationEnergy   = pdl 24.5880000000000000e+00; # eV
 our $heliumTwoIonizationEnergy   = pdl 54.4180000000000000e+00; # eV
 our $oxygenTwoIonizationEnergy   = pdl 35.1180000000000000e+00; # eV
+our $massGMC                     = pdl  3.7000000000000000e+07; # Mass of a giant molecular cloud at critical surface density; M☉.
+our $densitySurfaceCritical      = pdl  8.5000000000000000e+13; # Critical surface density for molecular clouds; M☉ Mpc⁻³
 
 sub Get_Total_Line_Luminosity {
     my $model       = shift;
@@ -144,19 +146,34 @@ sub Get_Line_Luminosity {
 	    );
 	# Compute hydrogen density.
 	$properties->{'densityHydrogen'} = pdl zeroes(nelem($dataSets->{$component."MassGas"}));
+	my $densitySurfaceGas                       = 
+	    +$dataSets->{$component."MassGas"}->($hasGas)
+	    /$dataSets->{$component."Radius" }->($hasGas)**2
+	    /2.0
+	    /$Pi;
+	my $massClouds                               = 
+	    +$massGMC
+	    *$densitySurfaceGas
+	    /$densitySurfaceCritical;
+	my $densitySurfaceClouds                     = 
+	    +max(                               
+	         +$densitySurfaceCritical,       
+	         +$densitySurfaceGas             
+	        );
 	$properties->{'densityHydrogen'}->($hasGas) .=
-	    log10(
-		$massSolar
-		*$dataSets->{$component."MassGas"}->($hasGas)
-		/$dataSets->{$component."Radius" }->($hasGas)**3
-		/$megaParsec                                 **3
-		*$centi                                      **3
-		/4.0
-		/$Pi
-		/$massAtomic
-		/$atomicMassHydrogen
-		/$massFractionHydrogen
-	    );
+	    +log10(                             
+	           +3.0                       
+	           /4.0                       
+	           *sqrt($Pi        )             
+	           /sqrt($massClouds)            
+	           *$densitySurfaceClouds**1.5
+	           /$megaParsec          **3     
+	           *$centi               **3     
+	           *$massFractionHydrogen         
+	           *$massSolar                   
+	           /$atomicMassHydrogen
+	           /$massAtomic
+	          );
 	# Compute Lyman continuum luminosity.
 	my $hasFlux = which($dataSets->{$component."LymanContinuumLuminosity:z".$redshift} > 0.0);
 	$properties->{'ionizingFluxHydrogen'} = pdl zeroes(nelem($dataSets->{$component."MassGas"}));
