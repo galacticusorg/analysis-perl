@@ -29,15 +29,22 @@ our $energyThermal;
 our $lineData;
 
 # Line list.
+# Line list.                                                                                                                                                                    
 our %lineList =
     (
      "H  1  6563A" => "balmerAlpha6563",
      "H  1  4861A" => "balmerBeta4861" ,
+     "H  1  4340A" => "balmerGamma4340" ,
+     "H  1  4102A" => "balmerDelta4102" ,
+     "H  1 1.875m" => "paschenAlpha18750",
+     "H  1 1.282m" => "paschenBeta12820",
      "O II  3726A" => "oxygenII3726"   ,
      "O II  3729A" => "oxygenII3729"   ,
      "O  3  4959A" => "oxygenIII4959"  ,
      "O  3  5007A" => "oxygenIII5007"  ,
+     "O  3  4931A" => "oxygenIII4931"  ,
      "N  2  6584A" => "nitrogenII6584" ,
+     "N  2  6548A" => "nitrogenII6548" ,
      "S II  6731A" => "sulfurII6731"   ,
      "S II  6716A" => "sulfurII6716"
     );

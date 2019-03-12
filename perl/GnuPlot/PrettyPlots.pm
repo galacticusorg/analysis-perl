@@ -456,10 +456,10 @@ sub Prepare_Dataset {
 	} elsif ( $style eq "boxes") {
 	    # Check if we are asked to plot just a single level.
 	    if ( exists($phaseRules{$phase}->{'level'}) ) {
-		# Plot just a single level, no real data.
-		${$plot}->{$phase}->{'command'} .= ${$plot}->{$phase}->{'prefix'}." '-' with boxes"
+		# Plot just a single level, no real data.		
+		${$plot}->{$phase}->{'command'} .= ${$plot}->{$phase}->{'prefix'}." '-' with boxes fs solid"
 		    .$lineType  {$phaseRules{$phase}->{'level'}}
-		.$lineColor {$phaseRules{$phase}->{'level'}}
+		.$lineColor{$phaseRules{$phase}->{'level'}}
 		.$lineWeight{$phaseRules{$phase}->{'level'}}
 		.$title;
 		${$plot}->{$phase}->{'data'   } .= $dummyPoint;
@@ -526,7 +526,12 @@ sub Prepare_Dataset {
 			    }
 			}
 		    } else {
-			${$plot}->{$phase}->{'data'} .= "plot '-' with boxes".$lineType{$level}.$lineColor{$level}.$lineWeight{$level}." notitle\n";
+			# If transparency is requested, adjust point color.
+			my $currentLineColor = $lineColor{$level};
+			if ( exists($options{'transparency'}) && $currentLineColor =~ m/rgbcolor "\#(.*)"/ ) {
+			    $currentLineColor = " lc rgbcolor \"#".sprintf("%2X",int(255*$options{'transparency'})).$1."\"";
+			}
+			${$plot}->{$phase}->{'data'} .= "plot '-' with boxes".$lineType{$level}.$currentLineColor.$lineWeight{$level}." notitle\n";
 			for(my $iPoint=0;$iPoint<nelem($x);++$iPoint) {
 			    ${$plot}->{$phase}->{'data'} .= $x->index($iPoint)." ".$y->index($iPoint)."\n";
 			}
