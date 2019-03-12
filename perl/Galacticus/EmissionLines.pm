@@ -56,6 +56,7 @@ our $megaParsec                  = pdl  3.0856775800000000e+22; # m
 our $massAtomic                  = pdl  1.6605389200000000e-27; # kg
 our $atomicMassHydrogen          = pdl  1.0079400000000000e+00; # amu
 our $massFractionHydrogen        = pdl  0.7070000000000000e+00; # Solar composition
+our $metallicitySolar            = pdl  0.0188000000000000e+00; # Solar metallicity
 our $boltzmannsConstant          = pdl  1.3810000000000000e-23; # J/K
 our $electronVolt                = pdl  1.6020000000000000e-19; # J
 our $hydrogenOneIonizationEnergy = pdl 13.5990000000000000e+00; # eV
@@ -139,6 +140,7 @@ sub Get_Line_Luminosity {
 	    log10(
 		+$dataSets->{$component."AbundancesGasMetals"}->($hasGas)
 		/$dataSets->{$component."MassGas"            }->($hasGas)
+		/$metallicitySolar
 	    );
 	# Compute hydrogen density.
 	$properties->{'densityHydrogen'} = pdl zeroes(nelem($dataSets->{$component."MassGas"}));

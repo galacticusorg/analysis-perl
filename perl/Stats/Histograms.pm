@@ -67,7 +67,7 @@ sub Histogram {
 	    $covariance +=  $weights(($i))**2*(transpose($fraction) x $fraction);
 	}
 	$errors .= sqrt($errors);
-    } else {
+   } else {
 	# Use direct binning.
 	# Add random offsets to x values if necessary.
 	my $xValuesUsed = $xValues->copy();
@@ -80,14 +80,20 @@ sub Histogram {
 	    # Only compute results for cases where we have at least one entry.
 	    if ( nelem($weightsSelected) >= 1 ) {	
 		# Sum up the weights in the bin.
-		$histogram ->(($iBin)        ) .= sum($weightsSelected);
+		$histogram ->(($iBin)        ) .=      sum($weightsSelected   ) ;
 		$errors    ->(($iBin)        ) .= sqrt(sum($weightsSelected**2));
-		$covariance->(($iBin),($iBin)) .= sum($weightsSelected**2);
+		$covariance->(($iBin),($iBin)) .=      sum($weightsSelected**2) ;
 	    } else {
 		# No values in this bin - return all zeroes.
 		$histogram ->(($iBin)        ) .= 0.0;
-		$errors    ->(($iBin)        ) .= 0.0;
-		$covariance->(($iBin),($iBin)) .= 0.0;	
+		if ( exists($options{'emptyBinWeight'}) ) {
+		    # A weight for empty bins was given - use this to set the error and covariance.
+		    $errors    ->(($iBin)        ) .= $options{'emptyBinWeight'}   ;
+		    $covariance->(($iBin),($iBin)) .= $options{'emptyBinWeight'}**2;
+		} else {
+		    $errors    ->(($iBin)        ) .= 0.0;
+		    $covariance->(($iBin),($iBin)) .= 0.0;
+		}
 	    }   
 	}	
     }

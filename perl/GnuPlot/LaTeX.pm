@@ -211,7 +211,7 @@ sub GnuPlot2PDF {
     move($gnuplotRoot.".tex.swapped",$gnuplotRoot.".tex");
 
     # Convert the plot body from EPS to PDF.
-   system "epstopdf ".$gnuplotRoot.".eps > /dev/null 2>&1"
+    system "epstopdf ".$gnuplotRoot.".eps > /dev/null 2>&1"
 	if ( -e $gnuplotRoot.".eps" );
 
     # Do we need to create a wrapper?
