@@ -71,7 +71,7 @@ our $heliumOneIonizationEnergy   = pdl 24.5880000000000000e+00; # eV
 our $heliumTwoIonizationEnergy   = pdl 54.4180000000000000e+00; # eV
 our $oxygenTwoIonizationEnergy   = pdl 35.1180000000000000e+00; # eV
 our $massGMC                     = pdl  3.7000000000000000e+07; # Mass of a giant molecular cloud at critical surface density; M☉.
-our $densitySurfaceCritical      = pdl  8.5000000000000000e+13; # Critical surface density for molecular clouds; M☉ Mpc⁻³
+our $densitySurfaceCritical      = pdl  8.5000000000000000e+13; # Critical surface density for molecular clouds; M☉ Mpc⁻².
 
 sub Get_Total_Line_Luminosity {
     my $model       = shift;
