@@ -24,7 +24,8 @@ my %sourceStruct = (
 my %versionStruct = (
     STRUCT_NAME => "Version",
     NAMESPACE   => { "stVersion"    => 'http://users.obs.carnegiescience.edu/abenson/galacticus/ns/xmpext/1.0' },
-    version     => { },
+    branch      => { },
+    hash        => { },
     revision    => { },
     runTime     => { }
     );
@@ -51,7 +52,6 @@ my %buildStruct     = (
     make_F03COMPILER_VERSION => { },
     make_F03FLAGS            => { },
     make_F03FLAGS_NOOPT      => { },
-    make_MODULETYPE          => { },
     make_PREPROCESSOR        => { }
     );
 %Image::ExifTool::UserDefined::galacticus = ( 
@@ -98,12 +98,13 @@ sub Write {
 
     # Extract version information.
     my $versionGroup = $hdfFile->group("Version");
-    my @version      = $versionGroup->attrGet("versionMajor","versionMinor","versionRevision","hgRevision","runTime");
+    my @version      = $versionGroup->attrGet("hgBranch","hgHash","hgRevision","runTime");
     $metaData{'Version'} =   
     {
-	version  => $version[0].".".$version[1].".".$version[2],
-	revision => $version[3],
-	runTime  => $version[4]
+	branch   => $version[0],
+	hash     => $version[1],
+	revision => $version[2],
+	runTime  => $version[3]
     };
 
     # Package any Mercurial changes.
@@ -147,7 +148,6 @@ sub Write {
 	"make_FCCOMPILER_VERSION",
 	"make_FCFLAGS",
 	"make_FCFLAGS_NOOPT",
-	"make_MODULETYPE",
 	"make_PREPROCESSOR"
 	);
     my $buildGroup = $hdfFile->group('Build');
