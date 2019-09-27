@@ -21,7 +21,7 @@ unless ( exists($ENV{'GALACTICUS_EXEC_PATH'}) ) {
     exit 0;
 }
 unless ( -e $ENV{'GALACTICUS_EXEC_PATH'}."/Galacticus_noMPI.exe" ) {
-    system("cd ".$ENV{'GALACTICUS_EXEC_PATH'}."; make -j16 Galacticus.exe; cp Galacticus.exe Galacticus_noMPI.exe");
+    system("cd ".$ENV{'GALACTICUS_EXEC_PATH'}."; rm Galacticus.exe; make -j16 Galacticus.exe; cp Galacticus.exe Galacticus_noMPI.exe");
     unless ( -e $ENV{'GALACTICUS_EXEC_PATH'}."/Galacticus_noMPI.exe" ) {
 	print "SKIPPED: Galacticus executable not available and could not be built";
 	exit 0;
