@@ -18,11 +18,13 @@
     <version>0.9.4</version>
     
     <!-- Specify output redshifts -->
-    <outputRedshifts value="0.0 1.0"/>
-
+    <outputTimesMethod value="list">
+      <redshifts value="0.0 1.0"/>
+    </outputTimesMethod>
+    
     <!-- Switch on star formation history tracking for Grasil processing. -->
-    <starFormationHistoriesMethod value="metallicitySplit"/>
-
+    <starFormationHistoryMethod value="metallicitySplit"/>
+    
     <!-- Switch on output of star formation rates. -->
     <spheroidOutputStarFormationRate value="true"/>
     <diskOutputStarFormationRate value="true"/>
