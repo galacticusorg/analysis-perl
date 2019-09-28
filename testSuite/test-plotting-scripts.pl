@@ -38,39 +38,7 @@ if ( $? == 0 ) {
 my @plottingScripts =
     (
      {
-	 script     => "Plot_Black_Hole_vs_Bulge_Mass.pl",
-	 model      => "0:1"
-     },
-     {
-	 script     => "Plot_HI_Mass_Function.pl",
-	 model      => "0:1"
-     },
-     {
-	 script     => "Plot_K_Luminosity_Function.pl",
-	 model      => "0:1"
-     },
-     {
-	 script     => "Plot_Morphological_Luminosity_Function.pl",
-	 model      => "0:1"
-     },
-     {
-	 script     => "Plot_SDSS_Color_Distribution.pl",
-	 model      => "0:1"
-     },
-     {
-	 script     => "Plot_SDSS_Gas_Metallicity.pl",
-	 model      => "0:1"
-     },
-     {
-	 script     => "Plot_Disk_Scalelengths.pl",
-	 model      => "0:1"
-     },
-     {
 	 script     => "Plot_SDSS_Tully_Fisher.pl",
-	 model      => "0:1"
-     },
-     {
-	 script     => "Plot_bJ_Luminosity_Function.pl",
 	 model      => "0:1"
      }
     );
