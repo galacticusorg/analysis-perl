@@ -18,8 +18,8 @@ use File::Which;
 my %sourceStruct = (
     STRUCT_NAME => "Source",
     NAMESPACE   => { "stSource"    => 'http://users.obs.carnegiescience.edu/abenson/galacticus/ns/xmpext/1.0' },
-    hgDiff      => { },
-    hgBundle    => { }
+    gitDiff      => { },
+    gitBundle    => { }
     );
 my %versionStruct = (
     STRUCT_NAME => "Version",
@@ -98,37 +98,36 @@ sub Write {
 
     # Extract version information.
     my $versionGroup = $hdfFile->group("Version");
-    my @version      = $versionGroup->attrGet("hgBranch","hgHash","hgRevision","runTime");
+    my @version      = $versionGroup->attrGet("gitBranch","gitHash","runTime");
     $metaData{'Version'} =   
     {
 	branch   => $version[0],
 	hash     => $version[1],
-	revision => $version[2],
-	runTime  => $version[3]
+	runTime  => $version[2]
     };
 
-    # Package any Mercurial changes.
+    # Package any Git changes.
     $metaData{'Source'} = {
-	hgDiff   => "",
-	hgBundle => ""
+	gitDiff   => "",
+	gitBundle => ""
     };
 
-    my $hg =&File::Which::which("hg");
-    if ( $hg ne "" && exists($ENV{'GALACTICUS_EXEC_PATH'}) ) {
-	system "hg summary ".$ENV{'GALACTICUS_EXEC_PATH'}." > /dev/null 2>&1" ;
-	my $isMercurialBranch = $?;
-	if ( $isMercurialBranch == 0 ) {
+    my $git =&File::Which::which("git");
+    if ( $git ne "" && exists($ENV{'GALACTICUS_EXEC_PATH'}) ) {
+	system "git show-ref ".$ENV{'GALACTICUS_EXEC_PATH'}." > /dev/null 2>&1" ;
+	my $isGitBranch = $?;
+	if ( $isGitBranch == 0 ) {
 	    my $cwd    = `pwd`;
-	    my $branch = `hg branch`;
+	    my $branch = `git rev-parse --abbrev-ref HEAD`;
 	    chomp($branch);
-	    system("cd ".$ENV{'GALACTICUS_EXEC_PATH'}."; hg bundle -t none -t ".$branch." ".$cwd."/hgBundle.meta https://abensonca\@bitbucket.org/galacticusdev/galacticus");
-	    my $hgDiff   = `hg diff $ENV{'GALACTICUS_EXEC_PATH'}`;
-	    my $hgBundle = read_file("hgBundle.meta");
+	    system("cd ".$ENV{'GALACTICUS_EXEC_PATH'}."; git bundle create ".$cwd."/gitBundle.meta HEAD ^origin");
+	    my $gitDiff   = `git diff $ENV{'GALACTICUS_EXEC_PATH'}`;
+	    my $gitBundle = read_file("gitBundle.meta");
 	    $metaData{'Source'} = {
-		hgDiff   => $hgDiff,
-		hgBundle => $hgBundle
+		gitDiff   => $gitDiff,
+		gitBundle => $gitBundle
 	    };
-	    unlink("hgBundle.meta");
+	    unlink("gitBundle.meta");
 	}
     }
 
@@ -233,22 +232,22 @@ sub Read {
 	# Get version info and report.
 	my $version = $exifTool->GetInfo('Version');
 	print "Galacticus Version:\n";
-	print "  Version           : ".$version->{'Version'}->{'Version' }."\n";
-	print "  Mercurial Revision: ".$version->{'Version'}->{'Revision'}."\n";
-	print "  Run Time          : ".$version->{'Version'}->{'RunTime' }."\n\n";
+	print "  Version     : ".$version->{'Version'}->{'Version' }."\n";
+	print "  Git Revision: ".$version->{'Version'}->{'Revision'}."\n";
+	print "  Run Time    : ".$version->{'Version'}->{'RunTime' }."\n\n";
 	print "==> Use:\n";
-	print "         hg clone -r ".$version->{'Version'}->{'Revision'}." https://abensonca\@bitbucket.org/galacticusdev/galacticus_v".$version->{'Version'}->{'Version' }."\n";
-	print "         hg unbundle -u ".$mergeFile."\n";
+	print "         git clone --single-branch --branch ".$version->{'Version'}->{'Branch'}." https://github.com/galacticusorg/galacticus.git\n";
+	print "         git bundle unbundle ".$mergeFile."\n";
 	print "         patch < ".$patchFile."\n\n";
 	print "    to obtain this version of Galacticus.\n\n";
 	
 	# Get source changeset.
 	my $changeSet = $exifTool->GetInfo('Source');
 	open(oHndl,">".$mergeFile);
-	print oHndl $changeSet->{'Source'}->{'HgBundle'};
+	print oHndl $changeSet->{'Source'}->{'GitBundle'};
 	close(oHndl);
 	open(oHndl,">".$patchFile);
-	print oHndl $changeSet->{'Source'}->{'HgDiff'};
+	print oHndl $changeSet->{'Source'}->{'GitDiff'};
 	close(oHndl);
 
 	# Get build info and report.
