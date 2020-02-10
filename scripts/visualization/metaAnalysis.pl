@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Cwd;
-use lib exists($ENV{'GALACTICUS_ROOT_V094'}) ? $ENV{'GALACTICUS_ROOT_V094'}.'/perl' : cwd().'/perl';
+use lib $ENV{'GALACTICUS_ANALYSIS_PERL_PATH'}."/perl";
 use PDL;
 use PDL::IO::HDF5;
 use GnuPlot::LaTeX;
@@ -34,10 +34,10 @@ foreach my $groupAvailable ( @groupsAvailable ) {
     $foundGroup = 1 if ( $groupAvailable eq "evolverProfiler" );
 }
 die ("metaAnalysis.pl: metaData/evolverProfile group does not exist") unless ( $foundGroup == 1 );
-my $timeSteps        = $HDFfile->group("metaData/evolverProfiler")->dataset("metaProfileTimeStep"        )->get();
-my $timeStepCount    = $HDFfile->group("metaData/evolverProfiler")->dataset("metaProfileTimeStepCount"   )->get();
-my $propertyNames    = $HDFfile->group("metaData/evolverProfiler")->dataset("metaProfilePropertyNames"   )->get();
-my $propertyHitCount = $HDFfile->group("metaData/evolverProfiler")->dataset("metaProfilePropertyHitCount")->get();
+my $timeSteps        = $HDFfile->group("metaData/evolverProfiler")->dataset("timeStep"        )->get();
+my $timeStepCount    = $HDFfile->group("metaData/evolverProfiler")->dataset("timeStepCount"   )->get();
+my $propertyNames    = $HDFfile->group("metaData/evolverProfiler")->dataset("propertyNames"   )->get();
+my $propertyHitCount = $HDFfile->group("metaData/evolverProfiler")->dataset("propertyHitCount")->get();
 my $propertyHitRate  = 100.0*$propertyHitCount/$propertyHitCount->sum();
 my $propertyIndex    = pdl 1..nelem($propertyHitRate);
 
