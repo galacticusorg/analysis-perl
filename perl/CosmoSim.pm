@@ -16,9 +16,9 @@ sub query {
     # Parse the Galacticus config file if it is present.
     my $sqlUser;
     my $sqlPassword;
-    if ( -e &galacticusPath()."/galacticusConfig.xml" ) {
+    if ( -e $ENV{'GALACTICUS_EXEC_PATH'}."/galacticusConfig.xml" ) {
 	my $xml    = new XML::Simple();
-	my $config = $xml->XMLin(&galacticusPath()."/galacticusConfig.xml");
+	my $config = $xml->XMLin($ENV{'GALACTICUS_EXEC_PATH'}."/galacticusConfig.xml");
 	if ( exists($config->{'cosmosimDB'}->{'host'}) ) {
 	    my %hosts;
 	    if ( exists($config->{'cosmosimDB'}->{'host'}->{'name'}) ) {
@@ -42,7 +42,7 @@ sub query {
 	    }
 	}
     }
-    die("generateHalosNBody: CosmoSim database username and password must be defined")
+    die("CosmoSim::query: CosmoSim database username and password must be defined")
 	unless ( defined($sqlUser) && defined($sqlPassword) );
     # Get Curl objects.
     my $xml      = new XML::Simple    ();
@@ -61,21 +61,21 @@ sub query {
     $curlPost->setopt(CURLOPT_SSL_VERIFYPEER    ,0                                   );
     $curlPost->setopt(CURLOPT_USERPWD           ,$sqlUser.":".$sqlPassword           );
     $curlPost->setopt(CURLOPT_WRITEDATA         ,\$createText                        );
-    print "generateHalosNBody: creating CosmoSim UWS job\n";
+    print "CosmoSim::query: creating CosmoSim UWS job\n";
     unless ( $curlPost->perform() == 0 ) {
 	print $curlPost->errbuf();
-	die("generateHalosNBody(): failed to create job");
+	die("CosmoSim::query(): failed to create job");
     }
     my $query = $xml->XMLin($createText);
     # Submit the job.
     my $submitText;
     my $submitForm = new WWW::Curl::Form();
-    $submitForm->formadd("phase","run");
+    $submitForm->formadd("phase","run" );
     $curlPost->setopt(CURLOPT_URL      ,"https://www.cosmosim.org/uws/query/".$query->{'uws:jobId'});
     $curlPost->setopt(CURLOPT_HTTPPOST ,$submitForm                                                );
     $curlPost->setopt(CURLOPT_WRITEDATA,\$submitText                                               );
-    print "generateHalosNBody: submitting CosmoSim UWS job\n";
-    die("generateHalosNBody(): failed to submit job")
+    print "CosmoSim::query: submitting CosmoSim UWS job\n";
+    die("CosmoSim::query(): failed to submit job")
 	unless ( $curlPost->perform() == 0 );
     # Check status.
     my $statusText;
@@ -86,10 +86,12 @@ sub query {
 	$curlGet->setopt(CURLOPT_USERPWD       ,$sqlUser.":".$sqlPassword                                           );
 	$curlGet->setopt(CURLOPT_SSL_VERIFYPEER,0                                                                   );
 	$curlGet->setopt(CURLOPT_WRITEDATA     ,\$statusText                                                        );
-	die("generateHalosNBody(): failed to check status")
-	    unless ( $curlGet->perform() == 0 );
-	print "generateHalosNBody: CosmoSim UWS job status is '".$statusText."'\n";
+	my $status = $curlGet->perform();
+	die("CosmoSim::query(): failed to check status")
+	    unless ( $status == 0 );
+	print "CosmoSim::query: CosmoSim UWS job status is '".$statusText."'\n";
 	if ( $statusText eq "ERROR" || $statusText eq "ABORTED" ) {
+	    print $curlGet->strerror($status)."\n";
 	    print $curlGet->errbuf()."\n";
 	    die;
 	}
@@ -100,7 +102,7 @@ sub query {
     $curlGet->setopt(CURLOPT_URL      ,"https://www.cosmosim.org/uws/query/".$query->{'uws:jobId'}."/results");
     $curlGet->setopt(CURLOPT_USERPWD  ,$sqlUser.":".$sqlPassword                                             );
     $curlGet->setopt(CURLOPT_WRITEDATA,\$resultsText                                                         );
-    die("generateHalosNBody(): failed to get results information")
+    die("CosmoSim::query(): failed to get results information")
 	unless ( $curlGet->perform() == 0 );
     my $results = $xml->XMLin($resultsText);
     # Download results.
@@ -108,10 +110,10 @@ sub query {
     $curlGet->setopt(CURLOPT_URL      ,$results->{'uws:result'}->{'csv'}->{'xlink:href'});
     $curlGet->setopt(CURLOPT_USERPWD  ,$sqlUser.":".$sqlPassword                        );
     $curlGet->setopt(CURLOPT_WRITEDATA,$resultsFile                                     );
-    print "generateHalosNBody: downloading CosmoSim data\n";
+    print "CosmoSim::query: downloading CosmoSim data\n";
     unless ( $curlGet->perform() == 0 ) {
 	print $curlGet->errbuf();
-	die("generateHalosNBody(): failed to get results information");
+	die("CosmoSim::query(): failed to get results information");
     }
     close($resultsFile);
     # Delete the job.
@@ -120,8 +122,8 @@ sub query {
     $curlGet->setopt(CURLOPT_USERPWD      ,$sqlUser.":".$sqlPassword                                   );
     $curlGet->setopt(CURLOPT_CUSTOMREQUEST, "DELETE"                                                   ); 
     $curlGet->setopt(CURLOPT_WRITEDATA    ,\$deleteText                                                );
-    print "generateHalosNBody: deleting CosmoSim UWS job\n";
-    die("generateHalosNBody(): failed to get results information")
+    print "CosmoSim::query: deleting CosmoSim UWS job\n";
+    die("CosmoSim::query(): failed to get results information")
 	unless ( $curlGet->perform() == 0 );
 }
 
