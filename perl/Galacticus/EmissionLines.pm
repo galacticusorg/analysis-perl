@@ -98,12 +98,15 @@ sub Get_Line_Luminosity {
 	 'ionizingFluxOxygenToHydrogen'
 	);
     # Define HII region properties.
-    my $massHIIRegion     = pdl 7.5e+3; # Solar masses.
-    my $durationHIIRegion = pdl 1.0e-3; # Gyr.
-    $massHIIRegion     = $model->{'emissionLines'}->{'hiiRegion'}->{'mass'    }
-        if ( exists($model->{'emissionLines'}->{'hiiRegion'}->{'mass'    }) );
-    $durationHIIRegion = $model->{'emissionLines'}->{'hiiRegion'}->{'lifetime'}
-        if ( exists($model->{'emissionLines'}->{'hiiRegion'}->{'lifetime'}) );
+    my $efficiencyHIIRegion = pdl 1.0e-2; # Efficiency (mass fraction converted into stars).
+    my $massHIIRegion       = pdl 7.5e+3; # Solar masses.
+    my $durationHIIRegion   = pdl 1.0e-3; # Gyr.
+    $efficiencyHIIRegion = $model->{'emissionLines'}->{'hiiRegion'}->{'efficiency'}
+        if ( exists($model->{'emissionLines'}->{'hiiRegion'}->{'efficiency'}) );
+    $massHIIRegion       = $model->{'emissionLines'}->{'hiiRegion'}->{'mass'      }
+        if ( exists($model->{'emissionLines'}->{'hiiRegion'}->{'mass'      }) );
+    $durationHIIRegion   = $model->{'emissionLines'}->{'hiiRegion'}->{'lifetime'  }
+        if ( exists($model->{'emissionLines'}->{'hiiRegion'}->{'lifetime'  }) );
     # Read the emission lines file if necessary.
     unless ( defined($emissionLines) ) {
 	my $tableFileName = $ENV{'GALACTICUS_DATA_PATH'}."/static/hiiRegions/emissionLines.hdf5";
@@ -273,7 +276,8 @@ sub Get_Line_Luminosity {
 	my $numberHIIRegion   = 
 	    +$dataSets->{$component."StarFormationRate"}
 	    *$durationHIIRegion
-	    /$massHIIRegion;
+	    /$massHIIRegion
+	    /$efficiencyHIIRegion;
 	# Convert the hydrogen ionizing luminosity to be per HII region.
 	$properties->{'ionizingFluxHydrogen'} -= log10($numberHIIRegion);
 	# Find interpolation indices for all five interpolants.
