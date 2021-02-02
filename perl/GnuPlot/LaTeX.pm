@@ -202,6 +202,9 @@ sub GnuPlot2PDF {
 		unless ( exists($labels{$md5}) );
 	    $labels{$md5} = 1;
 	}
+	if ( $line =~ m/\\usepackage\{graphicx\}/ ) {
+	    $line .= "\\usepackage{grffile}\n";
+	}
 	$line =~ s/includegraphics\{$folderName/includegraphics\{/;
 	print oHndl $line;
     }
