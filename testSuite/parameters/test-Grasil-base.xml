@@ -6,4 +6,41 @@
     <treesPerDecade value="25"/>
     <massTreeMaximum value="1e+14"/>
     <massTreeMinimum value="10000000000"/>
-  </mergerTreeBuildMassesMethod></parameters>
+  </mergerTreeBuildMassesMethod>
+  <!-- Node evolution and physics -->
+  <nodeOperatorMethod value="multi">
+    <!-- Halo spins -->
+    <nodeOperatorMethod value="haloSpinRandom">
+      <factorReset value="2.0"/>
+    </nodeOperatorMethod>
+    <!-- Star formation -->
+    <nodeOperatorMethod value="starFormationDisks"/>
+    <nodeOperatorMethod value="starFormationSpheroids"/>
+    <!--Stellar feedback outflows-->
+    <nodeOperatorMethod value="stellarFeedbackDisks">
+      <stellarFeedbackOutflowsMethod value="rateLimit">
+        <timescaleOutflowFractionalMinimum value="0.001"/>
+        <stellarFeedbackOutflowsMethod value="powerLaw">
+          <velocityCharacteristic value="250.0"/>
+          <exponent value="3.5"/>
+        </stellarFeedbackOutflowsMethod>
+      </stellarFeedbackOutflowsMethod>
+    </nodeOperatorMethod>
+    <nodeOperatorMethod value="stellarFeedbackSpheroids">
+      <stellarFeedbackOutflowsMethod value="rateLimit">
+        <timescaleOutflowFractionalMinimum value="0.001"/>
+        <stellarFeedbackOutflowsMethod value="powerLaw">
+          <velocityCharacteristic value="100.0"/>
+          <exponent value="3.5"/>
+        </stellarFeedbackOutflowsMethod>
+      </stellarFeedbackOutflowsMethod>
+    </nodeOperatorMethod>
+    <!-- Bar instability in galactic disks -->
+    <nodeOperatorMethod value="barInstability">
+      <galacticDynamicsBarInstabilityMethod value="efstathiou1982">
+	<stabilityThresholdGaseous value="0.7"/>
+	<stabilityThresholdStellar value="1.1"/>
+      </galacticDynamicsBarInstabilityMethod>
+    </nodeOperatorMethod>
+  </nodeOperatorMethod>
+</parameters>

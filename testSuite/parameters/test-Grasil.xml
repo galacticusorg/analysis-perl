@@ -26,8 +26,14 @@
     <starFormationHistoryMethod value="metallicitySplit"/>
     
     <!-- Switch on output of star formation rates. -->
-    <spheroidOutputStarFormationRate value="true"/>
-    <diskOutputStarFormationRate value="true"/>
+    <nodePropertyExtractorMethod value="multi">
+      <nodePropertyExtractorMethod value="starFormationRate" >
+	<component value="disk"    />
+      </nodePropertyExtractorMethod>
+      <nodePropertyExtractorMethod value="starFormationRate" >
+	<component value="spheroid"/>
+      </nodePropertyExtractorMethod>
+    </nodePropertyExtractorMethod>
     
   </parameters>
 </parameterGrid>
