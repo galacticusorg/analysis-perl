@@ -38,7 +38,6 @@ my %parameterStruct = (
 my %buildStruct     = (
     STRUCT_NAME => "Build",
     NAMESPACE   => { "stBuild"      => 'http://users.obs.carnegiescience.edu/abenson/galacticus/ns/xmpext/1.0' },
-    FGSL_library_version     => { },
     FoX_library_version      => { },
     GSL_library_version      => { },
     HDF5_library_version     => { },
@@ -133,7 +132,6 @@ sub Write {
 
     # Add build information.
     my @buildParameters = ( 
-	"FGSL_library_version",
 	"FoX_library_version",
 	"GSL_library_version",
 	"HDF5_library_version",
