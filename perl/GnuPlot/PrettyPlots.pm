@@ -249,6 +249,56 @@ push(@dashPatterns,pdl [ 10.0,  5.0, 5.0, 5.0 ]);
 push(@dashPatterns,pdl [ 20.0,  5.0, 2.0, 5.0 ]);
 push(@dashPatterns,pdl [ 20.0,  5.0, 2.0, 5.0, 2.0, 5.0 ]);
 
+# Color gradients.
+our %colorGradients =
+    (
+     rainbow =>
+     {
+	 fraction   => [   0.000,   1.000 ],
+	 hue        => [   0.000, 240.000 ],
+	 saturation => [   1.000,   1.000 ],
+	 value      => [   1.000,   1.000 ]
+     },
+     spectrum =>
+     {
+	 fraction   => [   0.000,   0.500,   1.000 ],
+	 hue        => [ 360.000, 180.000,   0.000 ],
+	 saturation => [   1.000,   1.000,   1.000 ],
+	 value      => [   1.000,   1.000,   1.000 ]
+     },
+     dark2 =>
+     {
+	 fraction   => [   0.000,   0.143,   0.286,   0.429,   0.571,   0.714,   0.857,   1.000 ],
+	 hue        => [ 162.000,  25.000, 244.000, 330.000,  88.000,  44.000,  38.000,   0.000 ],
+	 saturation => [   0.829,   0.991,   0.374,   0.823,   0.819,   0.991,   0.825,   0.000 ],
+	 value      => [   0.620,   0.851,   0.702,   0.906,   0.651,   0.902,   0.651,   0.400 ]
+     },
+     accent =>
+     {
+	 fraction   => [   0.000,   0.143,   0.286,   0.429,   0.571,   0.714,   0.857,   1.000 ],
+	 hue        => [ 120.000, 265.000,  29.000,  60.000, 214.000, 329.000,  24.000,   0.000 ],
+	 saturation => [   0.368,   0.179,   0.470,   0.400,   0.682,   0.992,   0.880,   0.000 ],
+	 value      => [   0.788,   0.831,   0.992,   1.000,   0.690,   0.941,   0.749,   0.400 ]
+     },
+     eightSet1 =>
+     {
+	 fraction   => [   0.000,   0.143,   0.286,   0.429,   0.571,   0.714,   0.857,   1.000 ],
+	 hue        => [   0.000, 206.000, 118.000, 292.000,  29.000,  60.000,  21.000, 329.000 ],
+	 saturation => [   0.886,   0.701,   0.577,   0.521,   1.000,   0.800,   0.759,   0.478 ],
+	 value      => [   0.894,   0.722,   0.686,   0.639,   1.000,   1.000,   0.651,   0.969 ]
+     }
+    );
+
+sub gradientColor {
+    my $fraction  = shift();
+    my $gradient  = shift();
+    my @hsv;
+    ($hsv[0]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'hue'       });
+    ($hsv[1]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'saturation'});
+    ($hsv[2]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'value'     });
+    my $color = Imager::Color->new(hsv => \@hsv);
+    return sprintf("#%02lx%02lx%02lx", $color->rgba() );
+}
 
 sub Color_Gradient {
     my $f         =   shift() ;
@@ -345,23 +395,10 @@ sub Prepare_Dataset {
     $lineWeight{'upper'} = "";
     my %lineWeightValue;
     if ( exists($options{'weight'}) ) {
-	if ( $versionMajor >= 5 ) {
-	    my $weightOuter = ${$options{'weight'}}[0]-2;
-	    my $weightInner = ${$options{'weight'}}[1]-1;
-	    $weightInner = 1
-		if ( $weightInner < 1 );
-	    $weightOuter = $weightInner+1
-		if ( $weightOuter < $weightInner+1 );
-	    $lineWeightValue{'lower'} =        $weightOuter;
-	    $lineWeightValue{'upper'} =        $weightInner;
-	    $lineWeight     {'lower'} = " lw ".$weightOuter;
-	    $lineWeight     {'upper'} = " lw ".$weightInner;
-	} else {
-	    $lineWeightValue{'lower'} =        ${$options{'weight'}}[0];
-	    $lineWeightValue{'upper'} =        ${$options{'weight'}}[1];
-	    $lineWeight     {'lower'} = " lw ".${$options{'weight'}}[0];
-	    $lineWeight     {'upper'} = " lw ".${$options{'weight'}}[1];
-	}
+	$lineWeightValue{'lower'} =        ${$options{'weight'}}[0];
+	$lineWeightValue{'upper'} =        ${$options{'weight'}}[1];
+	$lineWeight     {'lower'} = " lw ".${$options{'weight'}}[0];
+	$lineWeight     {'upper'} = " lw ".${$options{'weight'}}[1];
     }
     
     # Create attribute for line type, assuming no specification if type option is not present.
