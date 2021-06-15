@@ -122,11 +122,11 @@ sub Compute_Power_Spectrum {
     if ( $redshiftSpace == 1 ) {
 	# Compute the Hubble parameter at the selected redshift.
 	my $expansionFactor = $dataBlock->{'outputs'}->{'expansionFactor'}->index($dataBlock->{'output'}-1);
-	my $hubble = $dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'HubbleConstant'}->{'value'}
+	my $hubble = $dataBlock->{'parameters'}->{'cosmologyParameters'}->{'HubbleConstant'}->{'value'}
 	*sqrt(
-	    $dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaMatter'}->{'value'}/($expansionFactor**3)
-	    +$dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaDarkEnergy'}->{'value'}
-	    +(1.0-$dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaMatter'}->{'value'}-$dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaDarkEnergy'}->{'value'})/($expansionFactor**2)
+	    $dataBlock->{'parameters'}->{'cosmologyParameters'}->{'OmegaMatter'}->{'value'}/($expansionFactor**3)
+	    +$dataBlock->{'parameters'}->{'cosmologyParameters'}->{'OmegaDarkEnergy'}->{'value'}
+	    +(1.0-$dataBlock->{'parameters'}->{'cosmologyParameters'}->{'OmegaMatter'}->{'value'}-$dataBlock->{'parameters'}->{'cosmologyParameters'}->{'OmegaDarkEnergy'}->{'value'})/($expansionFactor**2)
 	    );
 	# Compute the growth rate (the quantity often approximated as f(Omega)=Omega^0.6 at z=0).
 	$growthRate = $growthFactorLogDerivative[0];

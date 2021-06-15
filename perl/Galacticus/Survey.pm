@@ -40,9 +40,9 @@ sub Get_SurveyProperties {
 	
 	# Initialize a cosmology.
 	my $cosmology = Astro::Cosmology->new(
-					      omega_matter => $dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaMatter'    }->{'value'},
-					      omega_lambda => $dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaDarkEnergy'}->{'value'},
-					      H0           => $dataBlock->{'parameters'}->{'cosmologyParametersMethod'}->{'HubbleConstant' }->{'value'}
+					      omega_matter => $dataBlock->{'parameters'}->{'cosmologyParameters'}->{'OmegaMatter'    }->{'value'},
+					      omega_lambda => $dataBlock->{'parameters'}->{'cosmologyParameters'}->{'OmegaDarkEnergy'}->{'value'},
+					      H0           => $dataBlock->{'parameters'}->{'cosmologyParameters'}->{'HubbleConstant' }->{'value'}
 					      );
 	
 	# Get list of redshifts.

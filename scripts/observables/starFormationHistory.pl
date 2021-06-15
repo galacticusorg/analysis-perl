@@ -73,9 +73,9 @@ foreach my $dataSet ( @{$data->{'starFormationRate'}} ) {
 	H0           => $columns->{'sfr'}->{'hubble'}
 	);
     my $cosmologyGalacticus = Astro::Cosmology->new(
-	omega_matter => $model->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaMatter'    }->{'value'},
-	omega_lambda => $model->{'parameters'}->{'cosmologyParametersMethod'}->{'OmegaDarkEnergy'}->{'value'},
-	H0           => $model->{'parameters'}->{'cosmologyParametersMethod'}->{'HubbleConstant' }->{'value'}
+	omega_matter => $model->{'parameters'}->{'cosmologyParameters'}->{'OmegaMatter'    }->{'value'},
+	omega_lambda => $model->{'parameters'}->{'cosmologyParameters'}->{'OmegaDarkEnergy'}->{'value'},
+	H0           => $model->{'parameters'}->{'cosmologyParameters'}->{'HubbleConstant' }->{'value'}
 	);
     my $volumeElementData            = $cosmologyData      ->differential_comoving_volume($x);
     my $volumeElementGalacticus      = $cosmologyGalacticus->differential_comoving_volume($x);

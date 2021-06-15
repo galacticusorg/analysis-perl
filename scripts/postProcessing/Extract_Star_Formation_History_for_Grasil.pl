@@ -148,7 +148,7 @@ print gHndl "#  Gas metallicity (disk, spheroid) [       ]:\t".$diskGasMetallici
 
 # See if we can check the integration of star formation histories.
 print gHndl "#\n";
-my @starFormationParameters = $HDFfile->group("Parameters")->attrGet("imfSelectionMethod","stellarPopulationPropertiesMethod");
+my @starFormationParameters = $HDFfile->group("Parameters")->attrGet("imfSelection","stellarPopulationProperties");
 if ( $starFormationParameters[0] eq "fixed" && $starFormationParameters[1] eq "instantaneous" ) {
     my @imfSelectionFixed = $HDFfile->group("Parameters")->attrGet("imfSelectionFixed");
     my $imfRecycledAttributeName = "imf".$imfSelectionFixed[0]."RecycledInstantaneous";
