@@ -7,7 +7,7 @@
   <doAnalysis>no</doAnalysis>
   <modelRootDirectory>testSuite/outputs/test-Grasil</modelRootDirectory>
   <baseParameters>testSuite/parameters/test-Grasil-base.xml</baseParameters>
-  <launchMethod>pbs</launchMethod>
+  <launchMethod>pbs</launch>
   <pbs>
     <ompThreads>16</ompThreads>
     <maxJobsInQueue>40</maxJobsInQueue>
@@ -18,22 +18,22 @@
     <version>0.9.4</version>
     
     <!-- Specify output redshifts -->
-    <outputTimesMethod value="list">
+    <outputTimes value="list">
       <redshifts value="0.0 1.0"/>
-    </outputTimesMethod>
+    </outputTimes>
     
     <!-- Switch on star formation history tracking for Grasil processing. -->
-    <starFormationHistoryMethod value="metallicitySplit"/>
+    <starFormationHistory value="metallicitySplit"/>
     
     <!-- Switch on output of star formation rates. -->
-    <nodePropertyExtractorMethod value="multi">
-      <nodePropertyExtractorMethod value="starFormationRate" >
+    <nodePropertyExtractor value="multi">
+      <nodePropertyExtractor value="starFormationRate" >
 	<component value="disk"    />
-      </nodePropertyExtractorMethod>
-      <nodePropertyExtractorMethod value="starFormationRate" >
+      </nodePropertyExtractor>
+      <nodePropertyExtractor value="starFormationRate" >
 	<component value="spheroid"/>
-      </nodePropertyExtractorMethod>
-    </nodePropertyExtractorMethod>
+      </nodePropertyExtractor>
+    </nodePropertyExtractor>
     
   </parameters>
 </parameterGrid>
