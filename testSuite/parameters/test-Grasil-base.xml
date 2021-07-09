@@ -2,13 +2,17 @@
 <parameters>
   <formatVersion>2</formatVersion>
   <version>0.9.4</version>
+
   <mergerTreeBuildMasses value="sampledDistributionUniform">
     <treesPerDecade value="25"/>
     <massTreeMaximum value="1e+14"/>
     <massTreeMinimum value="10000000000"/>
   </mergerTreeBuildMasses>
+
   <!-- Node evolution and physics -->
   <nodeOperator value="multi">
+    <!-- Halo concentrations -->
+    <nodeOperator value="darkMatterProfileScaleInterpolate"/>
     <!-- Halo spins -->
     <nodeOperator value="haloSpinRandom">
       <factorReset value="2.0"/>
@@ -43,4 +47,5 @@
       </galacticDynamicsBarInstability>
     </nodeOperator>
   </nodeOperator>
+
 </parameters>
