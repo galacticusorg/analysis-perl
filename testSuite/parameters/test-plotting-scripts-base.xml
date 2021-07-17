@@ -11,6 +11,7 @@
 
   <!-- Output properties -->
   <nodePropertyExtractor value="multi">
+    <nodePropertyExtractor value="nodeIndices"/>
     <nodePropertyExtractor value="virialProperties"/>
     <nodePropertyExtractor value="mainBranchStatus"/>
   </nodePropertyExtractor>
