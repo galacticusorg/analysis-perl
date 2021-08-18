@@ -11,6 +11,7 @@ use lib $ENV{'GALACTICUS_ANALYSIS_PERL_PATH'}."/perl";
 use PDL;
 use XML::Simple;
 use Galacticus::HDF5;
+use Data::Dumper;
 
 %Galacticus::HDF5::galacticusFunctions = ( %Galacticus::HDF5::galacticusFunctions,
     "^(disk|spheroid|total)(Lyman|Helium|Oxygen)ContinuumLuminosity:z[\\d\\.]+\$" => \&Galacticus::IonizingContinuua::Get_Ionizing_Luminosity
@@ -58,17 +59,33 @@ sub Get_Ionizing_Luminosity {
 	    }
 	}
 	# Construct the name of the corresponding luminosity properties.
+	&Galacticus::HDF5::Get_Datasets_Available($model);
 	my @luminosityDatasets;
+	my $luminosityDatasetName;
+	if ( grep {$_ eq "diskLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.$postprocessingChain} keys(%{$model->{'dataSetsAvailable'}}) ) {
+	    $luminosityDatasetName->{'disk'} = "diskLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.$postprocessingChain;
+	} elsif ( grep {$_ eq "diskLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.":zOut".$redshift.$postprocessingChain} keys(%{$model->{'dataSetsAvailable'}}) ) {
+	    $luminosityDatasetName->{'disk'} = "diskLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.":zOut".$redshift.$postprocessingChain;
+	}
+	if ( grep {$_ eq "spheroidLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.$postprocessingChain} keys(%{$model->{'dataSetsAvailable'}}) ) {
+	    $luminosityDatasetName->{'spheroid'} = "spheroidLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.$postprocessingChain;
+	} elsif ( grep {$_ eq "spheroidLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.":zOut".$redshift.$postprocessingChain} keys(%{$model->{'dataSetsAvailable'}}) ) {
+	    $luminosityDatasetName->{'spheroid'} = "spheroidLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.":zOut".$redshift.$postprocessingChain;
+	}
 	if ( $component eq "total" ) {
+	    die("luminosity datasets do not exist")
+		unless ( exists($luminosityDatasetName->{'disk'}) && exists($luminosityDatasetName->{'spheroid'}) );
 	    push(
-		@luminosityDatasets,
-		"diskLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.$postprocessingChain,
-		"spheroidLuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.$postprocessingChain
+		@luminosityDatasets                 ,
+		$luminosityDatasetName->{'disk'    },
+		$luminosityDatasetName->{'spheroid'}
 		);
 	} else {
+	    die("luminosity datasets do not exist")
+		unless ( exists($luminosityDatasetName->{$component}) );
 	    push(
-		@luminosityDatasets,
-		$component."LuminositiesStellar:".$filterName{$continuumName}.":rest:z".$redshift.$postprocessingChain
+		@luminosityDatasets                 ,
+		$luminosityDatasetName->{$component}
 		);
 	}
 	&Galacticus::HDF5::Get_Dataset($model,\@luminosityDatasets);
