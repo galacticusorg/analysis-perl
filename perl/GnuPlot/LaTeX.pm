@@ -140,9 +140,9 @@ sub GnuPlot2ODG {
     my @svg2officeLocations = ( "/usr/bin", "/usr/local/bin", $ENV{'HOME'}."/bin" );
     push(
 	@svg2officeLocations,
-	$ENV{'GALACTICUS_ROOT_V094'}."../Tools/bin"
+	$ENV{'GALACTICUS_EXEC_PATH'}."../Tools/bin"
 	)
-	if ( exists($ENV{'GALACTICUS_ROOT_V094'}) );
+	if ( exists($ENV{'GALACTICUS_EXEC_PATH'}) );
     my $svg2office;
     foreach my $location ( @svg2officeLocations ) {
 	$svg2office = $location."/svg2office-1.2.2.jar"

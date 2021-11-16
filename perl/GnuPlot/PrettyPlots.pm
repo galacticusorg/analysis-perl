@@ -259,6 +259,13 @@ our %colorGradients =
 	 saturation => [   1.000,   1.000 ],
 	 value      => [   1.000,   1.000 ]
      },
+     redGreen =>
+     {
+	 fraction   => [   0.000,   1.000 ],
+	 hue        => [   0.000, 120.000 ],
+	 saturation => [   1.000,   1.000 ],
+	 value      => [   1.000,   1.000 ]
+     },
      spectrum =>
      {
 	 fraction   => [   0.000,   0.500,   1.000 ],
@@ -297,7 +304,7 @@ sub gradientColor {
     ($hsv[1]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'saturation'});
     ($hsv[2]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'value'     });
     my $color = Imager::Color->new(hsv => \@hsv);
-    return sprintf("#%02lx%02lx%02lx", $color->rgba() );
+    return sprintf("#%02lx%02lx%02lx%02lx", $color->rgba() );
 }
 
 sub Color_Gradient {

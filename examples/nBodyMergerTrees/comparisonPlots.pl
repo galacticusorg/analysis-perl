@@ -1,8 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Cwd;
-use lib exists($ENV{'GALACTICUS_ROOT_V094'}) ? $ENV{'GALACTICUS_ROOT_V094'}.'/perl' : cwd().'/perl';
+use lib $ENV{'GALACTICUS_ANALYSIS_PERL_PATH'}."/perl";
 use PDL;
 use PDL::IO::HDF5;
 use PDL::IO::HDF5::Dataset;
