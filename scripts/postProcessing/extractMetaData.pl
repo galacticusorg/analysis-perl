@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use lib "./perl";
+use lib $ENV{'GALACTICUS_ANALYSIS_PERL_PATH'}."/perl";
 use strict;
 use warnings;
 use XMP::MetaData;

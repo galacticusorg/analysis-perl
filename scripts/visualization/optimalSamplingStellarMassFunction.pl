@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use lib "./perl";
+use lib $ENV{'GALACTICUS_ANALYSIS_PERL_PATH'}."/perl";
 use PDL;
 use XML::Simple;
 use GnuPlot::PrettyPlots;
