@@ -38,7 +38,7 @@ our $Pi                          = pdl  3.1415927000000000e+00;
 our $centi                       = pdl  1.0000000000000000e-02;
 our $mega                        = pdl  1.0000000000000000e+06;
 our $erg                         = pdl  1.0000000000000000e-07; # J
-our $plancksConstant             = pdl  6.6260680000000000e-34; # J s
+our $plancksConstant             = pdl  6.6260700400000000e-34; # J s
 our $speedOfLight                = pdl  2.9979245800000000e+08; # m/s
 our $angstroms                   = pdl  1.0000000000000000e-10; # m
 our $luminositySolar             = pdl  3.8390000000000000e+26; # W
@@ -51,7 +51,8 @@ our $atomicMassHydrogen          = pdl  1.0079400000000000e+00; # amu
 our $massFractionHydrogen        = pdl  0.7070000000000000e+00; # Solar composition
 our $metallicitySolar            = pdl  0.0188000000000000e+00; # Solar metallicity
 our $boltzmannsConstant          = pdl  1.3810000000000000e-23; # J/K
-our $electronVolt                = pdl  1.6020000000000000e-19; # J
+our $electronVolt                = pdl  1.6021766340000000e-19; # J
+our $rydbergEnergy               = pdl 13.6056931229940000e+00; # eV
 our $hydrogenOneIonizationEnergy = pdl 13.5990000000000000e+00; # eV
 our $heliumOneIonizationEnergy   = pdl 24.5880000000000000e+00; # eV
 our $heliumTwoIonizationEnergy   = pdl 54.4180000000000000e+00; # eV
@@ -315,23 +316,23 @@ sub setLineList {
     if ( $cloudyVersionMajor >= 17 ) {
 	%lineList =
 	    (
-	     "H  1      6562.81A" => "balmerAlpha6563"  ,
-	     "H  1      4861.33A" => "balmerBeta4861"   ,
-	     "H  1      4340.46A" => "balmerGamma4340"  ,
-	     "H  1      4101.73A" => "balmerDelta4102"  ,
-	     "H  1      1.87510m" => "paschenAlpha18750",
-	     "H  1      1.28180m" => "paschenBeta12820" ,
-	     "O  2      3726.03A" => "oxygenII3726"     ,
-	     "O  2      3728.81A" => "oxygenII3729"     ,
-	     "O  3      4958.91A" => "oxygenIII4959"    ,
-	     "O  3      5006.84A" => "oxygenIII5007"    ,
-	     "O  3      4931.23A" => "oxygenIII4931"    ,
-	     "N  2      6583.45A" => "nitrogenII6584"   ,
-	     "N  2      6548.05A" => "nitrogenII6548"   ,
-	     "S  2      6730.82A" => "sulfurII6731"     ,
-	     "S  2      6716.44A" => "sulfurII6716"     ,
-	     "S  3      9068.62A" => "sulfurIII9069"    ,
-	     "S  3      9530.62A" => "sulfurIII9531"
+	     "H  1      6564.62A" => "balmerAlpha6565"  ,
+	     "H  1      4862.69A" => "balmerBeta4863"   ,
+	     "H  1      4341.68A" => "balmerGamma4342"  ,
+	     "H  1      4102.89A" => "balmerDelta4103"  ,
+	     "H  1      1.87561m" => "paschenAlpha18756",
+	     "H  1      1.28215m" => "paschenBeta12822" ,
+	     "O  2      3727.09A" => "oxygenII3727"     ,
+	     "O  2      3729.88A" => "oxygenII3730"     ,
+	     "O  3      4960.29A" => "oxygenIII4960"    ,
+	     "O  3      5008.24A" => "oxygenIII5008"    ,
+	     "O  3      4932.60A" => "oxygenIII4933"    ,
+	     "N  2      6585.27A" => "nitrogenII6585"   ,
+	     "N  2      6549.86A" => "nitrogenII6550"   ,
+	     "S  2      6732.67A" => "sulfurII6733"     ,
+	     "S  2      6718.29A" => "sulfurII6718"     ,
+	     "S  3      9071.11A" => "sulfurIII9071"    ,
+	     "S  3      9533.23A" => "sulfurIII9533"
 	    );
     } else {
 	# Prior to Cloudy v17 a shorter labelling was used.
@@ -365,6 +366,7 @@ sub Generate_Tables {
     # Get path to Cloudy.
     my %cloudyOptions = %{$model->{'emissionLines'}->{'Cloudy'}};
     (my $cloudyPath, my $cloudyVersion) = &Cloudy::Initialize(%cloudyOptions);
+    (my $cloudyVersionMajor = $cloudyVersion) =~ s/\.\d+$//;
     # Set line list.
     &setLineList($cloudyVersion);
     # Compute cloud properties.
@@ -703,7 +705,7 @@ sub Generate_Tables {
 				    }
 				}
 				my $energy          = $plancksConstant*$speedOfLight/$wavelength/$angstroms/$electronVolt;
-				my $energyRydbergs  = $energy/$hydrogenOneIonizationEnergy;
+				my $energyRydbergs  = $energy/$rydbergEnergy;
 				$energyThermal     .= $boltzmannsConstant*$temperature/$electronVolt;
 				my $luminosity      = $normalization*$energy**3/(exp($energy/$energyThermal)-1.0);
 				my $logLuminosity   = $luminosity < 1.0e-37 ? -37.0 : log10($luminosity);
@@ -739,6 +741,8 @@ sub Generate_Tables {
 			$cloudyScript .= "iterate to convergence\n";
 			# Write save location.
 			$cloudyScript .= "print lines faint _off\n";
+			$cloudyScript .= "print line vacuum\n" # Use vacuum wavelengths for all lines in Cloudy v17+
+			    if ( $cloudyVersionMajor >= 17 );
 			$cloudyScript .= "save lines, array \"".$workspace."lines".$jobCount.".out\"\n";
 			# Write the Cloudy script to file.
 			my $cloudyScriptFileName = $workspace."cloudyInput".$jobCount.".txt";
@@ -914,7 +918,7 @@ sub linesParse {
 		    $lineLuminosity =~ s/\s+$//;
 		    $lineEnergy     =~ s/^\s+//;
 		    $lineEnergy     =~ s/\s+$//;
-		    my $lineWavelength = $plancksConstant*$speedOfLight/$hydrogenOneIonizationEnergy/$electronVolt/$lineEnergy/$angstroms;
+		    my $lineWavelength = $plancksConstant*$speedOfLight/$rydbergEnergy/$electronVolt/$lineEnergy/$angstroms;
 		    $lineData
 			->{$lineName}
 		    ->{'luminosity'}
