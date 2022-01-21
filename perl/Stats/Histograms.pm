@@ -126,7 +126,7 @@ sub Histogram {
 	# Divide by the bin width to get a differential distribution.
 	$errors     /= $binWidth;
 	$histogram  /= $binWidth;
-	$covariance /= $binWidth**2;
+	$covariance /= outer($binWidth,$binWidth);
     }
     # Return the results.
     return ($histogram,$errors,$covariance);
