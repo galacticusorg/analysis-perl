@@ -367,6 +367,9 @@ sub Generate_Tables {
     my %cloudyOptions = %{$model->{'emissionLines'}->{'Cloudy'}};
     (my $cloudyPath, my $cloudyVersion) = &Cloudy::Initialize(%cloudyOptions);
     (my $cloudyVersionMajor = $cloudyVersion) =~ s/\.\d+$//;
+    # Determine HII region model to use.
+    $model->{'emissionLines'}->{'hiiRegionModel'} = "new"
+	unless ( exists($model->{'emissionLines'}->{'hiiRegionModel'}) );
     # Set line list.
     &setLineList($cloudyVersion);
     # Compute cloud properties.
@@ -713,32 +716,45 @@ sub Generate_Tables {
 			    }
 			}
 			$cloudyScript .= "\n";
-			$cloudyScript .= "q(h) = ".$logHydrogenLuminosity."\n";
-			# Use Cloudy's abundance table for the ISM - this includes depletion onto grains. But, do not include
-			# grains here - we want to set them later so that we can switch off quantum heating.
-			$cloudyScript .= "abundances ISM no grains\n";
-			# Set dust grains for the ISM, and switch off quantum heating of grains. Without switching off this
-			# heating some models exit with a failed assertion
-			# (https://cloudyastrophysics.groups.io/g/Main/message/4618). According to Gary Ferland
-			# (https://cloudyastrophysics.groups.io/g/Main/message/4049): "It is safe to turn off quantum heating since
-			# that only affects the NIR continuous spectrum, assuming you do not care about grain emission in that
-			# part of the spectrum."
-			$cloudyScript .= "grains ISM no qheat\n";
-			# Scale metals by our metallicity, also scale grain abundances by the metallicity (to preserve a constant
-			# dust-to-metals ratio).
-			$cloudyScript .= "metals ".$logMetallicity       ." log grains\n";
-			$cloudyScript .= "constant pressure\n";
-			$cloudyScript .= "gravity spherical\n";
-			# Increase the number of times the ionization solver can be invoked before Cloudy issues an error. With
-			# the default number (3000) some models fail.
-			$cloudyScript .= "set pressure ionize 10000\n";
-			$cloudyScript .= "hden   ".$logHydrogenDensity   ."\n";
-			$cloudyScript .= "sphere expanding\n";
-			$cloudyScript .= "radius ".$radiusCharacteristicLogarithmic." ".$radiusCloudsLogarithmic." parsecs\n";
-			$cloudyScript .= "stop temperature 100 k\n";
-			# Include the cosmic ray background to ensure that we have some heating in optically thick regions.
-			$cloudyScript .= "cosmic ray background\n";
-			$cloudyScript .= "iterate to convergence\n";
+			# Determine which HII region model to use, and construct it.
+			if ( $model->{'emissionLines'}->{'hiiRegionModel'} eq "new" ) {
+			    $cloudyScript .= "q(h) = ".$logHydrogenLuminosity."\n";
+			    # Use Cloudy's abundance table for the ISM - this includes depletion onto grains. But, do not include
+			    # grains here - we want to set them later so that we can switch off quantum heating.
+			    $cloudyScript .= "abundances ISM no grains\n";
+			    # Set dust grains for the ISM, and switch off quantum heating of grains. Without switching off this
+			    # heating some models exit with a failed assertion
+			    # (https://cloudyastrophysics.groups.io/g/Main/message/4618). According to Gary Ferland
+			    # (https://cloudyastrophysics.groups.io/g/Main/message/4049): "It is safe to turn off quantum heating since
+			    # that only affects the NIR continuous spectrum, assuming you do not care about grain emission in that
+			    # part of the spectrum."
+			    $cloudyScript .= "grains ISM no qheat\n";
+			    # Scale metals by our metallicity, also scale grain abundances by the metallicity (to preserve a constant
+			    # dust-to-metals ratio).
+			    $cloudyScript .= "metals ".$logMetallicity       ." log grains\n";
+			    $cloudyScript .= "constant pressure\n";
+			    $cloudyScript .= "gravity spherical\n";
+			    # Increase the number of times the ionization solver can be invoked before Cloudy issues an error. With
+			    # the default number (3000) some models fail.
+			    $cloudyScript .= "set pressure ionize 10000\n";
+			    $cloudyScript .= "hden   ".$logHydrogenDensity   ."\n";
+			    $cloudyScript .= "sphere expanding\n";
+			    $cloudyScript .= "radius ".$radiusCharacteristicLogarithmic." ".$radiusCloudsLogarithmic." parsecs\n";
+			    $cloudyScript .= "stop temperature 100 k\n";
+			    # Include the cosmic ray background to ensure that we have some heating in optically thick regions.
+			    $cloudyScript .= "cosmic ray background\n";
+			    $cloudyScript .= "iterate to convergence\n";
+			} elsif ( $model->{'emissionLines'}->{'hiiRegionModel'} eq "old" ) {
+			    $cloudyScript .= "q(h) = ".$logHydrogenLuminosity.    "\n";
+			    $cloudyScript .= "metals ".$logMetallicity       ." log\n";
+			    $cloudyScript .= "hden   ".$logHydrogenDensity   .    "\n";
+			    $cloudyScript .= "sphere expanding\n";
+			    $cloudyScript .= "radius 16.0\n";
+			    $cloudyScript .= "stop temperature 1000 k\n";
+			    $cloudyScript .= "iterate to convergence\n";
+			} else {
+			    die("Unknown HII region model");
+			}
 			# Write save location.
 			$cloudyScript .= "print lines faint _off\n";
 			$cloudyScript .= "print line vacuum\n" # Use vacuum wavelengths for all lines in Cloudy v17+
@@ -823,6 +839,8 @@ sub Generate_Tables {
 	$lineGroup->dataset($lineName)->attrSet(unitsInSI   => 1.0e-7                                );
 	$lineGroup->dataset($lineName)->attrSet(wavelength  => $lineData->{$lineName}->{'wavelength'});
     }
+    # Write model meta-data.
+    $tableFile->attrSet(model => $model->{'emissionLines'}->{'hiiRegionModel'});
 }
 
 sub planckFunction {
