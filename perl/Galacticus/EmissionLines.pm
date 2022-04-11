@@ -14,9 +14,13 @@ use PDL::GSL::INTEG;
 use Storable;
 use Data::Dumper;
 use Cloudy;
+use Galacticus::Options;
+use Galacticus::Launch::Hooks;
+use Galacticus::Launch::PBS;
+use Galacticus::Launch::Slurm;
+use Galacticus::Launch::Local;
 use Galacticus::HDF5;
 use Galacticus::IonizingContinuua;
-use Galacticus::Launch::PBS;
 use Galacticus::Filters;
 
 %Galacticus::HDF5::galacticusFunctions = ( %Galacticus::HDF5::galacticusFunctions,
@@ -363,6 +367,9 @@ sub Generate_Tables {
     # Generate tables of line luminosities using Cloudy.
     $tableFileName = shift();
     my $model      = shift();
+    # Parse config options.
+    my $queueManager = &Galacticus::Options::Config(                'queueManager' );
+    my $queueConfig  = &Galacticus::Options::Config($queueManager->{'manager'     });
     # Get path to Cloudy.
     my %cloudyOptions = %{$model->{'emissionLines'}->{'Cloudy'}};
     (my $cloudyPath, my $cloudyVersion) = &Cloudy::Initialize(%cloudyOptions);
@@ -802,13 +809,9 @@ sub Generate_Tables {
 	}
     }
     # Submit jobs.
-    my %arguments =
-	(
-	 pbsJobMaximum       => 1000,
-	 submitSleepDuration =>    1,
-	 waitSleepDuration   =>   10
-	);
-    &Galacticus::Launch::PBS::SubmitJobs(\%arguments,@pbsStack);
+    my %launchOptions = %{$model->{'emissionLines'}->{'launcher'}}
+    if ( exists($model->{'emissionLines'}->{'launcher'}) );
+    &{$Galacticus::Launch::Hooks::moduleHooks{$queueManager->{'manager'}}->{'jobArrayLaunch'}}(\%launchOptions,@pbsStack);
     # Write the line data to file.
     my $tableFile = new PDL::IO::HDF5(">".$tableFileName);
     # Write parameter grid points.
@@ -841,6 +844,7 @@ sub Generate_Tables {
     }
     # Write model meta-data.
     $tableFile->attrSet(model => $model->{'emissionLines'}->{'hiiRegionModel'});
+    print "Table written to file\n";
 }
 
 sub planckFunction {
@@ -1014,7 +1018,18 @@ sub linesParse {
 	}
     }
     # Clean up.
-    unlink($linesFileName,$pbsLaunchFileName,$pbsLogFileName,$cloudyScriptFileName);
+    unlink($linesFileName,$pbsLaunchFileName,$pbsLogFileName,$cloudyScriptFileName)
+	if (
+	    $lineData
+	    ->{'status'}
+	    ->(
+		($iOxygenToHeliumRatio  ),
+		($iHeliumToHydrogenRatio),
+		($iLogHydrogenLuminosity),
+		($iLogHydrogenDensity   ),
+		($iMetallicity          )
+	    ) == 0
+	);
 }
 
 sub Patch_Tables {
@@ -1058,7 +1073,7 @@ sub Patch_Tables {
 			for(my $iOxygen=0;$iOxygen<nelem($logOxygenToHeliumRatios);++$iOxygen) {
 			    (my $jOxygen, my $hOxygen) = &interpolants($iOxygen,$logOxygenToHeliumRatios,$stepSize);
 			    if ( $lineData->{'status'}->(($iOxygen),($iHelium),($iHydrogen),($iDensity),($iMetallicity)) != 0 ) {
-				# Check that all require neighbor points are available.
+				# Check that all required neighbor points are available.
 				if
 				    (
 				     all
