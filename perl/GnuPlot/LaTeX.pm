@@ -204,6 +204,9 @@ sub GnuPlot2PDF {
 	}
 	if ( $line =~ m/\\usepackage\{graphicx\}/ ) {
 	    $line .= "\\usepackage{grffile}\n";
+	    $line .= "\\usepackage{amsmath}\n";
+	    $line .= "\\usepackage{amssymb}\n";
+	    $line .= "\\usepackage{bm}\n";
 	}
 	$line =~ s/includegraphics\{$folderName/includegraphics\{/;
 	print oHndl $line;
