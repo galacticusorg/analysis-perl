@@ -208,7 +208,7 @@ sub GnuPlot2PDF {
 	    $line .= "\\usepackage{amssymb}\n";
 	    $line .= "\\usepackage{bm}\n";
 	}
-	$line =~ s/includegraphics\{$folderName/includegraphics\{/;
+	$line =~ s/includegraphics(\[[^\]]+\])??\{$folderName/includegraphics\{/;
 	print oHndl $line;
     }
     close(oHndl);
