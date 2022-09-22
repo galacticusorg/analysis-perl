@@ -746,8 +746,8 @@ sub grasilPostProcess {
 		    $line =~ s/^\s*//;
 		    $line =~ s/\s*$//;
 		    my @columns = split(/\s+/,$line);
-		    $wavelength(                ($iWavelength)) .= $columns[0];
-		    $SED       (($iInclination),($iWavelength)) .= $columns[5];
+		    $wavelength->(                ($iWavelength)) .= $columns[0];
+		    $SED       ->(($iInclination),($iWavelength)) .= $columns[5];
 		}
 	    }
 	    close($grasilSED);
