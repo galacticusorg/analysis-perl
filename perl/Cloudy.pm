@@ -11,7 +11,16 @@ sub Initialize {
     # Download and compile Cloudy so that it is ready for use.
     (my %options) = @_;
     # Specify Cloudy version.
-    my $cloudyVersion = exists($options{'version'}) ? $options{'version'} : "17.02";
+    if ( exists($ENV{'GALACTICUS_EXEC_PATH'}) && ! exists($options{'version'}) ) {
+	open(my $dependencies,$ENV{'GALACTICUS_EXEC_PATH'}."/aux/dependencies.yml");
+	while ( my $line = <$dependencies> ) {
+	    if ( $line =~ m/^cloudy:\s+([\d\.]+)/ ) {
+		$options{'version'} = $1;
+	    }
+	}
+	close($dependencies);
+    }
+    my $cloudyVersion = exists($options{'version'}) ? $options{'version'} : "23.01";
     (my $cloudyVersionMajor = $cloudyVersion) =~ s/\.\d+$//;
     # Specify Cloudy path.
     system("mkdir -p ".$ENV{'GALACTICUS_DATA_PATH'}."/dynamic/c".$cloudyVersion);
