@@ -256,7 +256,7 @@ sub GnuPlot2PDF {
 	if ( $fileToLaTeX =~ m/^(.*)\/(.*)$/ ) {
 	    my $dirName  = $1;
 	    my $fileName = $2;
-	    system("mv ".$fileToLaTeX.".tex ".$fileToLaTeX.".tmp");
+	    system("mv \"".$fileToLaTeX.".tex\" \"".$fileToLaTeX.".tmp\"");
 	    open(my $inTeX,     $fileToLaTeX.".tmp");
 	    open(my $outTeX,">".$fileToLaTeX.".tex");
 	    while ( my $line = <$inTeX> ) {
