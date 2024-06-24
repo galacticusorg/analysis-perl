@@ -492,6 +492,7 @@ sub Prepare_Dataset {
 	data => {
 	}
 	);
+    my $axesUnset = 0;
 
     # Loop over phases.
     foreach my $phase ( keys(%phaseRules) ) {
@@ -526,7 +527,12 @@ sub Prepare_Dataset {
 			${$plot}->{$phase}->{'data'} .= $x->index($iPoint)." ".$y->index($iPoint)."\n";
 		    }
 		    ${$plot}->{$phase}->{'data'} .= $endPoint;
-		}
+		    # Switch off borders and tics after the first plot.
+		    if ( $phase eq "data" && ! $axesUnset ) {
+			${$plot}->{$phase}->{'data'} .= "unset label; unset border; unset xtics; unset ytics; unset x2tics; unset y2tics; set xlabel ''; set ylabel ''; set x2label ''; set y2label ''\n";
+			$axesUnset = 1;
+		    }
+ 		}
 	    }
 	} elsif ( $style eq "filledCurve" ) {
 	    # Draw a filled curve - using the "y2" option as the second set of y points.
@@ -569,6 +575,11 @@ sub Prepare_Dataset {
 		${$plot}->{$phase}->{'data'} .= $x->index(nelem($x)-1)." ".$y->index(nelem($x)-1)." ".$y->index(nelem($x)-1)."\n"
 		    if ( $options{'filledCurve'} eq "closed" );
 		${$plot}->{$phase}->{'data'} .= $endPoint;
+		# Switch off borders and tics after the first plot.
+		if ( $phase eq "data" && ! $axesUnset ) {
+		    ${$plot}->{$phase}->{'data'} .= "unset label; unset border; unset xtics; unset ytics; unset x2tics; unset y2tics; set xlabel ''; set ylabel ''; set x2label ''; set y2label ''\n";
+		    $axesUnset = 1;
+		}
 	    }
 	} elsif ( $style eq "boxes") {
 	    # Check if we are asked to plot just a single level.
@@ -654,6 +665,11 @@ sub Prepare_Dataset {
 			}
 			${$plot}->{$phase}->{'data'} .= $endPoint;
 		    }
+		}
+		# Switch off borders and tics after the first plot.
+		if ( $phase eq "data" && ! $axesUnset ) {
+		    ${$plot}->{$phase}->{'data'} .= "unset label; unset border; unset xtics; unset ytics; unset x2tics; unset y2tics; set xlabel ''; set ylabel ''; set x2label ''; set y2label ''\n";
+		    $axesUnset = 1;
 		}
 	    }
 	} elsif ( $style eq "point" ) {
@@ -785,6 +801,11 @@ sub Prepare_Dataset {
 			${$plot}->{$phase}->{'data'} .= $x->index($iPoint)." ".$y->index($iPoint).$errors."\n";
 			${$plot}->{$phase}->{'data'} .= $endPoint;
 			${$plot}->{$phase}->{'data'} .= $clearArrows if ( $level eq "lower" );
+			# Switch off borders and tics after the first plot.
+			if ( $phase eq "data" && ! $axesUnset ) {
+			    ${$plot}->{$phase}->{'data'} .= "unset label; unset border; unset xtics; unset ytics; unset x2tics; unset y2tics; set xlabel ''; set ylabel ''; set x2label ''; set y2label ''\n";
+			    $axesUnset = 1;
+			}
 			# Clear any error bars after lower layer plot.
 			$errorCommand = "";
 			$errors       = "";	
@@ -803,13 +824,11 @@ sub Plot_Datasets {
     my (%options) = @_ if ( $#_ >= 1 );
     print $gnuPlot "set multiplot\n"
 	unless ( exists($options{'multiPlot'}) && $options{'multiPlot'} == 1 );
+    print $gnuPlot ${$plot}->{'data'}->{'data'};
     foreach my $phase ( 'keyLower', 'keyUpper' ) {
 	print $gnuPlot ${$plot}->{$phase}->{'command'}."\n";
 	print $gnuPlot ${$plot}->{$phase}->{'data'   };
-	# Switch off borders and tics after the first plot.	
-	print $gnuPlot "unset label; unset border; unset xtics; unset ytics; unset x2tics; unset y2tics; set xlabel ''; set ylabel ''; set x2label ''; set y2label ''\n" if ( $phase eq "keyLower" );
-    }
-    print $gnuPlot ${$plot}->{'data'}->{'data'};
+   }
     print $gnuPlot "unset multiplot\n"
 	unless ( exists($options{'multiPlot'}) && $options{'multiPlot'} == 1 );
     undef(${$plot});
