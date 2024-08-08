@@ -300,9 +300,13 @@ sub gradientColor {
     my $fraction  = shift();
     my $gradient  = shift();
     my @hsv;
-    ($hsv[0]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'hue'       });
-    ($hsv[1]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'saturation'});
-    ($hsv[2]) = interpolate($fraction,$gradient->{'fraction'},$gradient->{'value'     });
+    my $gradientFraction = pdl @{$gradient->{'fraction'}};
+    my $gradientHue = pdl @{$gradient->{'hue'}};
+    my $gradientSaturation = pdl @{$gradient->{'saturation'}};
+    my $gradientValue = pdl @{$gradient->{'value'}};
+    ($hsv[0]) = interpolate($fraction,$gradientFraction,$gradientHue       );
+    ($hsv[1]) = interpolate($fraction,$gradientFraction,$gradientSaturation);
+    ($hsv[2]) = interpolate($fraction,$gradientFraction,$gradientValue     );
     my $color = Imager::Color->new(hsv => \@hsv);
     return sprintf("#%02lx%02lx%02lx%02lx", $color->rgba() );
 }
