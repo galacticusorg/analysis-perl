@@ -276,7 +276,13 @@ sub GnuPlot2PDF {
     capture_merged {system $command} stdout => $tmpFile;
     my $logOutput = read_file($tmpFile->filename());
     unless ( $logOutput =~ m/LaTeX Error/ ) {
-	move($folderName.$fileToLaTeX."-crop.pdf",$gnuplotPdfFile);
+	if ( -e $folderName.$fileToLaTeX."-crop.pdf" ) {
+	    move($folderName.$fileToLaTeX."-crop.pdf",$gnuplotPdfFile);
+	} elsif ( -e $folderName.$fileToLaTeX.".pdfcrop.pdf" ) {
+	    move($folderName.$fileToLaTeX.".pdfcrop.pdf",$gnuplotPdfFile);
+	} else {
+	    die('can not find output file from pdfcrop');
+	}
 	unless ( exists($options{'cleanUp'}) && $options{'cleanUp'} == 0 ) {
 	    unlink(
 		$folderName.$fileToLaTeX.".tex",
